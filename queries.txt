@@ -1,0 +1,10 @@
+ SELECT distinct ?works ?artist WHERE {?works a dbo:Song; dbp:award "Platinum"@en; dbo:artist ?artist; dbo:releaseDate ?releaseDate. FILTER( ?releaseDate > "2007-01-01"^^xsd:date && ?releaseDate < "2007-02-01"^^xsd:date)}
+
+
+
+SELECT ?artist ?birthplace
+WHERE {
+  ?artist a dbo:MusicalArtist ;
+          dbo:birthPlace ?birthplace .
+}
+LIMIT 10

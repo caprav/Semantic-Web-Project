@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SPARQL Query UI</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .result {
+            text-align: left;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            overflow: auto; /* Add scrollbar when content overflows */
+            max-height: 400px; /* Limit maximum height and enable scrolling if needed */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SPARQL Query UI</h1>
+        <form action="/execute-query" method="POST">
+            <textarea name="query" placeholder="Enter SPARQL query" style="width: 100%; height: 200px;"></textarea>
+            <br>
+            <button type="submit">Execute Query</button>
+        </form>
+        <div class="result">
+            <h2>Query Result:</h2>
+            <pre>{{ query_result }}</pre>
+        </div>
+    </div>
+</body>
+</html>
