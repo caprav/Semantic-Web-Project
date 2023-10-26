@@ -83,9 +83,9 @@ for record in data_table_records:
     results_array = record.find_all_next('a')
     hit_songs_URI = results_array[0].text
     artist_URI = results_array[1].text
-    print(hit_songs_URI)
+"""     print(hit_songs_URI)
     print(artist_URI)
-    print("\n")
+    print("\n") """
 
 
     """
