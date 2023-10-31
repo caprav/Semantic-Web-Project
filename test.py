@@ -3,7 +3,7 @@ from rdflib.graph import DATASET_DEFAULT_GRAPH_ID as default
 from rdflib.plugins.stores.sparqlstore import SPARQLUpdateStore
 from SPARQLWrapper import SPARQLWrapper, JSON, N3
 from pprint import pprint
-
+from two_hit_wonders import external_ontology_queries  #  query_dbpedia_isHitSongOf, query_foaf_artist_name
 
 sparql = SPARQLWrapper("https://dbpedia.org/sparql")
 sparql.setQuery(
@@ -31,8 +31,9 @@ query_endpoint = "http://localhost:3030/music.ttl/query"
 update_endpoint = "http://localhost:3030/music.ttl/update"
 store.open((query_endpoint, update_endpoint))
 
-prefixes = "prefix ex: <http://example.org/>"
-ns = Namespace("http://example.org/")
+#  VC - probably can delete these 10/31/2023 after some test that they do nothing
+#  prefixes = "prefix ex: <http://example.org/>"
+#  ns = Namespace("http://example.org/")
 
 query1 = ('SELECT distinct ?works ?artist WHERE {?works a dbo:Song; dbp:award "Platinum"@en; dbo:artist ?artist; '
           'dbo:releaseDate ?releaseDate. FILTER( ?releaseDate > "2007-01-01"^^xsd:date && ?releaseDate < '
@@ -42,7 +43,16 @@ query2 = ('CONSTRUCT {?works <http://example.org/isHitSongOf> ?artist} WHERE {?w
           '"2007-01-01"^^xsd:date && ?releaseDate < "2007-02-01"^^xsd:date)}')
 
 sparql = SPARQLWrapper("https://dbpedia.org/sparql")
-sparql.setQuery(query2)
+
+g = Graph(store, identifier=default)
+for query in external_ontology_queries:
+    sparql.setQuery(query)
+    sparql.setReturnFormat(N3)
+    query_result = sparql.query().convert()
+    g.parse(query_result)
+
+'''
+parql.setQuery(query_dbpedia_isHitSongOf)
 sparql.setReturnFormat(N3)
 qres = sparql.query().convert()
 
@@ -51,6 +61,15 @@ g = Graph(store, identifier=default)
 #g = Graph()
 # g.parse(url)
 g.parse(qres)
+print(len(g))
+
+
+sparql.setQuery(query_foaf_artist_name)
+sparql.setReturnFormat(N3)
+qres = sparql.query().convert()
+g.parse(qres)
+'''
+
 print(len(g))
 
 for stmt in g:
