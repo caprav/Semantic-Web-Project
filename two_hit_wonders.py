@@ -3,11 +3,10 @@ external_ontology_queries = []
 prefixes = "prefix foaf: <http://xmlns.com/foaf/0.1/>"
 
 """
-VC - Here parameterized values for the user to specify
+VC - Here parameterized values for the user to specify @Ramya, these need to be hooked up to front end
 """
-
-start_date = "2007-01-01"  # need to get as input from webpage, might need to cast to a string
-end_date = "2007-02-01"  # need to get as input from webpage, might need to cast to a string
+start_date = "2002-01-01"  # need to get as input from webpage, might need to cast to a string
+end_date = "2008-02-01"  # need to get as input from webpage, might need to cast to a string
 hit_threshold = '"Platinum"@en'
 
 # VC - constructs a triple in the format  ?song isHitSongOf ?artist
@@ -38,3 +37,5 @@ if song belongs to an album use that > IE primary artist is the one who recorded
 else, other idea, some other source have maybe some type of property? that defines this
 What about songs that don't belong to any album? billing order on the listing?
 """
+
+
