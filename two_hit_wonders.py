@@ -7,7 +7,7 @@ VC - Here parameterized values for the user to specify @Ramya, these need to be 
 """
 start_date = "2002-01-01"  # need to get as input from webpage, might need to cast to a string
 end_date = "2008-02-01"  # need to get as input from webpage, might need to cast to a string
-hit_threshold = '"Platinum"@en'
+hit_threshold = '"Platinum"@en' #  VC - or "Gold"
 
 # VC - constructs a triple in the format  ?song isHitSongOf ?artist
 query_dbpedia_isHitSongOf = ('CONSTRUCT {?works <http://example.org/isHitSongOf> ?artist} '
