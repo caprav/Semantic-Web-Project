@@ -1,0 +1,69 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Fedrated Data {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+      
+  {% include "includes/sidenav.html" %}
+
+  <main class="main-content position-relative border-radius-lg ">
+
+    % include "includes/navigation.html" %}
+
+    <div class="container-fluid py-4">
+<!-- Need to modify later : Sharayu -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0">
+              <h6>Space for Vince Code.</h6>
+              <h6>This UI will be utlized to invoke vince code at the backend</h6>
+              <h6>Backend logic will be Vince's  code to trigger fuseki and display results here</h6>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+ 
+
+
+    </div>
+
+
+    <div class="container">
+      <h1>SPARQL Query UI</h1>
+      <form action="/get_fuseki" method="POST">
+          <textarea name="query" placeholder="Enter SPARQL query" style="width: 100%; height: 200px;"></textarea>
+          <br>
+          <button type="submit">Execute Query</button>
+      </form>
+      <div class="result">
+          <h2>Query Result:</h2>
+          <pre>{{ query_result }}</pre>
+      </div>
+  </div>
+  
+
+
+
+  </main>
+
+
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+ 
+
+
+
+
+
+
+{% endblock javascripts %}
+
+{% endblock content %}
