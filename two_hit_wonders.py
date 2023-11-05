@@ -1,7 +1,9 @@
 # VC - a list of queries to execute external ontologies
 external_ontology_queries = []
 return_Fuseki_results_queries = []
-prefixes = "prefix foaf: <http://xmlns.com/foaf/0.1/>"
+
+prefixes = ("prefix foaf: <http://xmlns.com/foaf/0.1/> "
+            "")
 
 """
 VC - Here parameterized values for the user to specify @Ramya, these need to be hooked up to front end
@@ -9,6 +11,24 @@ VC - Here parameterized values for the user to specify @Ramya, these need to be 
 start_date = "2002-01-01"  # need to get as input from webpage, might need to cast to a string
 end_date = "2008-02-01"  # need to get as input from webpage, might need to cast to a string
 hit_threshold = '"Platinum"@en'
+"""
+VC - This can be set from the front-end, should have a drop down for the following options:
+    group - returns results for only groups - executes query: 
+    solo - returns results for only solo artists - executes query: 
+    both - returns results for both groups amd solo artists - executes query: 
+"""
+check_for_group_or_solo = 'group'
+
+match check_for_group_or_solo:
+    case "solo":
+        group_or_solo_query_string = "?artist a dbo:Person. "
+    case "group":
+        group_or_solo_query_string = "?artist a dbo:Group. "
+        #  VC - Need to add a union statement here for dbo:Band (ex: https://dbpedia.org/page/Black_Eyed_Peas)
+
+    #  VC - this is the default case and catches the "both" option or if the user doesn't specify
+    case _:
+        group_or_solo_query_string = "?artist a owl:Thing. "
 
 """
 VC TO DO: Add an if statement here and a checkbox variable to include featured artists in the results
@@ -23,10 +43,10 @@ query_dbpedia_isHitSongOf = ('CONSTRUCT {?works <http://example.org/isHitSongOf>
                              'WHERE {?works a dbo:Song; '
                              'dbp:award ' + hit_threshold + '; ' +  # user defines "hits" as either gold or platinum
                              'dbo:artist ?artist; '
-                             'dbo:releaseDate ?releaseDate. '
+                             'dbo:releaseDate ?releaseDate. ' +
+                             group_or_solo_query_string +
                              'FILTER( ?releaseDate > "' + start_date + '"^^xsd:date '
                              '&& ?releaseDate < "' + end_date + '"^^xsd:date)}')
-external_ontology_queries.append(query_dbpedia_isHitSongOf)
 
 # VC - Query to get the literal names of the artists and add to the insert
 query_foaf_artist_name = (prefixes +
@@ -38,25 +58,28 @@ query_foaf_artist_name = (prefixes +
                           '?artist_uri foaf:name ?artist '
                           'FILTER( ?releaseDate > "' + start_date + '"^^xsd:date '
                           '&& ?releaseDate < "' + end_date + '"^^xsd:date)}')
-external_ontology_queries.append(query_foaf_artist_name)
 
 """
 VC - if song belongs to an album using that to determine the primary artist of a song. This, in effect, removes
 the featured artist as the one who has the hit. We can resuse this query in other places as well. 
 """
-
-query_is_primary_song_artist =('CONSTRUCT{?works <http://example.org/isHitSongOfPrimaryArtist> ?album_artist} '
+query_is_primary_song_artist = ('CONSTRUCT {?works <http://example.org/isHitSongOfPrimaryArtist> ?artist} '
                                'WHERE {?works a dbo:Song; '
                                'dbp:award ' + hit_threshold + '; ' +
                                'dbo:artist ?artist_uri; '
                                'dbo:releaseDate ?releaseDate; '
                                'dbo:album ?works_album. '
-                               '?works_album dbp:artist ?album_artist. '
-                               '?album_artist a owl:Thing. '
+                               '?works_album dbp:artist ?artist. ' +
+                               group_or_solo_query_string +
+                               #'?artist a owl:Thing. '
                                'FILTER( ?releaseDate > "' + start_date + '"^^xsd:date '
                                '&& ?releaseDate < "' + end_date + '"^^xsd:date)}')
 
-external_ontology_queries.append(query_is_primary_song_artist)
+
+#  VC - here is where we can introduce a case statement
+external_ontology_queries.append(query_dbpedia_isHitSongOf)
+external_ontology_queries.append(query_foaf_artist_name)
+#  external_ontology_queries.append(query_is_primary_song_artist)
 
 
 """
