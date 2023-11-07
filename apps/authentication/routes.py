@@ -52,7 +52,8 @@ def login():
 def register():
     create_account_form = CreateAccountForm(request.form)
     if 'register' in request.form:
-
+        # Redirect to the login page upon successful registration by Ramya
+    
         username = request.form['username']
         email = request.form['email']
 
@@ -80,14 +81,10 @@ def register():
         # Delete user from session
         logout_user()
 
-        return render_template('accounts/register.html',
-                               msg='User created successfully.',
-                               success=True,
-                               form=create_account_form)
+        return redirect(url_for('authentication_blueprint.login'))
 
     else:
         return render_template('accounts/register.html', form=create_account_form)
-
 
 @blueprint.route('/logout')
 def logout():

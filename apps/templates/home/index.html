@@ -1,102 +1,106 @@
-{% extends 'layouts/base.html' %}
-
-{% block title %} Dashboard {% endblock title %}
-
-<!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
-
-{% block content %}
-
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
-    
-  {% include "includes/sidenav.html" %}
-
-  <main class="main-content position-relative border-radius-lg ">
-
-    {% include "includes/navigation.html" %}
-
-    <div class="container-fluid py-4">
-
-      
-
-      <div class="row mt-4">
-        <div class="col-lg-7 mb-lg-0 mb-4">
-          <div class="card z-index-2 h-100">
-            <div class="card-header pb-0 pt-3 bg-transparent">
-              <h6 class="text-capitalize">Music Suggestions</h6>
-               
-            </div>
-            <div class="card-body p-3">
-              <div class="chart">
-                <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-5">
-          <div class="card card-carousel overflow-hidden h-100 p-0">
-            <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
-              <div class="carousel-inner border-radius-lg h-100">
-                <div class="carousel-item h-100 active" style="background-image: url('{{ config.ASSETS_ROOT }}/img/carousel-1.jpg');
-         background-size: cover;">
-                  <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
-                    <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
-                      <i class="ni ni-camera-compact text-dark opacity-10"></i>
-                    </div>
-                    <h5 class="text-white mb-1">Add some content here</h5>
-                    <p>Need to consider some additions here</p>
-                  </div>
-                </div>
-                <div class="carousel-item h-100" style="background-image: url('{{ config.ASSETS_ROOT }}/img/carousel-2.jpg');
-          background-size: cover;">
-                  <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
-                    <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
-                      <i class="ni ni-bulb-61 text-dark opacity-10"></i>
-                    </div>
-                    <h5 class="text-white mb-1">Faster way to create web pages</h5>
-                    <p>That’s my skill. I’m not really specifically talented at anything except for the ability to learn.</p>
-                  </div>
-                </div>
-                <div class="carousel-item h-100" style="background-image: url('{{ config.ASSETS_ROOT }}/img/carousel-3.jpg');
-          background-size: cover;">
-                  <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
-                    <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
-                      <i class="ni ni-trophy text-dark opacity-10"></i>
-                    </div>
-                    <h5 class="text-white mb-1">   with us your design tips!</h5>
-                    <p>Don’t be afraid to be wrong because you can’t learn anything from a compliment.</p>
-                  </div>
-                </div>
-              </div>
-              <button class="carousel-control-prev w-5 me-3" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next w-5 me-3" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div>
-          </div>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet">
+  <style>
+    /* Add custom styles specific to index.html here */
+    .container {
+      max-width: 900px; /* Adjust the container width as needed */
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2; /* Set your desired background color */
+      border-radius: 15px; /* Adjust border radius for rounded corners */
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Add a box shadow for depth */
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .option {
+      background-color: #3498db; /* Set your desired background color for options */
+      color: #ffffff; /* Set your desired text color for options */
+      border: 1px solid #2979aa; /* Add a border for options */
+      border-radius: 10px; /* Adjust border radius for rounded option boxes */
+      margin: 10px;
+      padding: 20px;
+      flex-basis: calc(33.33% - 20px); /* Adjust the width to fit the number of options per row */
+      text-align: center;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .option a {
+      text-decoration: none;
+      color: inherit;
+    }
+    /* Add styles for hover effects here */
+    .option:hover {
+      background-color: #2979aa; /* Change background color on hover */
+    }
+    body {
+      background: url("{{ url_for('static', filename='assets/img/index_background.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body class="g-sidenav-show bg-gray-100">
+ 
+  <main class="main-content position-relative border-radius-lg">
+    <a href="{{ url_for('authentication_blueprint.logout') }}" class="position-absolute top-0 end-0 m-4 text-white font-weight-bold">
+      <i class="fa fa-sign-out me-1"></i> LOGOUT
+    </a>
+    <h1 class="mb-4">
+      <i class="fa fa-music me-2"></i> Music World
+    </h1>
+    <!-- Container for Objectives -->
+    <div class="container" style="margin-bottom: 20px;">
+      <h2 style="font-size: 18px; margin-bottom: 5px;">Objectives</h2>
+      <p style="margin-top: 5px;">This application provides you with interaction with different Musical sources and offers many interactive reports for you.</p>
+    </div>
+    <!-- Container for Options -->
+    <div class="container">
+      <!-- Option 1 -->
+      <div class="option" title="This is Option 1">
+        <a href="/interactive_report?param=Option%1">Option 1</a>
       </div>
-
-
-    
-
-
-
-
-
-  
-  </main>  
-
-{% endblock content %}
-
-<!-- Specific JS goes HERE --> 
-{% block javascripts %}
-  
-
-  
-
-{% endblock javascripts %}
+      <!-- Option 2 -->
+      <div class="option" title="This is Option 2">
+        <a href="/interactive_report?param=Option%2">Option 2</a>
+      </div>
+      <!-- Option 3 -->
+      <div class="option" title="This is Option 3">
+        <a href="/interactive_report?param=Option%3">Option 3</a>
+      </div>
+      <!-- Option 4 -->
+      <div class="option" title="This is Option 4">
+        <a href="/interactive_report?param=Option%4">Option 4</a>
+      </div>
+      <!-- Option 5 -->
+      <div class="option" title="This is Option 5">
+        <a href="/interactive_report?param=Option%5">Option 5</a>
+      </div>
+      <!-- Option 6 -->
+      <div class="option" title="This is Option 6">
+        <a href="/interactive_report?param=Option%6">Option 6</a>
+      </div>
+      <!-- Option 7 -->
+      <div class="option" title="This is Option 7">
+        <a href="/interactive_report?param=Option%7">Option 7</a>
+      </div>
+      <!-- Option 8 -->
+      <div class="option" title="This is Option 8">
+        <a href="/interactive_report?param=Option%8">Option 8</a>
+      </div>
+      <!-- Option 9 -->
+      <div class="option" title="This is Option 9">
+        <a href="/interactive_report?param=Option%9">Option 9</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
