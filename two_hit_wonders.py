@@ -8,8 +8,8 @@ prefixes = ("prefix foaf: <http://xmlns.com/foaf/0.1/> "
 """
 VC - Here parameterized values for the user to specify @Ramya, these need to be hooked up to front end
 """
-start_date = "2002-01-01"  # need to get as input from webpage, might need to cast to a string
-end_date = "2008-02-01"  # need to get as input from webpage, might need to cast to a string
+start_date = "2007-01-01"  # need to get as input from webpage, might need to cast to a string
+end_date = "2007-03-01"  # need to get as input from webpage, might need to cast to a string
 hit_threshold = '"Platinum"@en'
 """
 VC - This can be set from the front-end, should have a drop down for the following options:
@@ -17,7 +17,7 @@ VC - This can be set from the front-end, should have a drop down for the followi
     solo - returns results for only solo artists - executes query: 
     both - returns results for both groups amd solo artists - executes query: 
 """
-check_for_group_or_solo = 'group'
+check_for_group_or_solo = 'both'
 
 match check_for_group_or_solo:
     case "solo":

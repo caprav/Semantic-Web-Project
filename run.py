@@ -11,6 +11,7 @@ from pprint import pprint
 from two_hit_wonders import (
     external_ontology_queries, return_all_isHitSongOf_artists
 )  #  query_dbpedia_isHitSongOf, query_foaf_artist_name
+from hits_by_song_duration import duration_external_ontology_queries
 from flask import Flask, render_template, request
 from apps.config import config_dict
 from apps import create_app, db
@@ -73,11 +74,11 @@ def fuseki():
     store.open((query_endpoint, update_endpoint))
 
 
-    sparql = SPARQLWrapper("https://dbpedia.org/sparql")
+    sparql = SPARQLWrapper("http://dbtune.org/musicbrainz/snorql/")  # "https://dbpedia.org/sparql")
 
     g = Graph(store, identifier=default)
 
-    for query in external_ontology_queries:
+    for query in duration_external_ontology_queries: # external_ontology_queries:
         sparql.setQuery(query)
         sparql.setReturnFormat(N3)
         query_result = sparql.query().convert()
