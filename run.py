@@ -44,62 +44,6 @@ if DEBUG:
     app.logger.info("ASSETS_ROOT      = " + app_config.ASSETS_ROOT)
 
 
-# Sharayu: Define a route to interact with Fuseki and DBpedia
-@app.route("/get_fuseki", methods=["POST"])
-def fuseki():
-    print("inside fuseki")
-
-    # query1= request.form['query']
-
-    # Sharayu: Define SPARQL query to retrieve data from DBpedia
-
-    sparql = SPARQLWrapper("https://dbpedia.org/sparql")
-    sparql.setQuery(
-        """
-        SELECT ?artist ?birthplace
-    WHERE {
-    ?artist a dbo:MusicalArtist ;
-            dbo:birthPlace ?birthplace .
-    }
-    LIMIT 10
-    """
-    )
-    sparql.setReturnFormat(JSON)
-    #qres = sparql.query().convert()
-
-    store = SPARQLUpdateStore()
-    query_endpoint = "http://localhost:3030/music/query"
-    update_endpoint = "http://localhost:3030/music/update"
-    store.open((query_endpoint, update_endpoint))
-
-
-    sparql = SPARQLWrapper("https://dbpedia.org/sparql")
-
-    g = Graph(store, identifier=default)
-
-    for query in external_ontology_queries:
-        sparql.setQuery(query)
-        sparql.setReturnFormat(N3)
-        query_result = sparql.query().convert()
-        g.parse(query_result)
-
-    #  VC - This line actually puts the info into Fuseki
-    store.add_graph(g)
-
-    #  VC - can't use sparql below, need to use the store (pointing to Fuseki), sparql is pointing to dbpedia
-    fuseki_result = store.query(return_all_isHitSongOf_artists)
-
-    # sharayu - Process and print the results
-    res = """"""
-
-    for record in fuseki_result:
-        res += record.artist_name.toPython()
-
-    print(res)
-
-    return render_template("fedrated.html", query_result=res)
-
-
 if __name__ == "__main__":
     # Change the port to the desired value (e.g., 8080)
     app.run()

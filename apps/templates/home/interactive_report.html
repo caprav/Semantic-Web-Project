@@ -7,7 +7,7 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet">
   <style>
-    /* Add custom styles specific to index.html here */
+    /* Add custom styles specific to interactive_report.html here */
     .container {
       max-width: 900px;
       margin: 0 auto;
@@ -39,6 +39,14 @@
     .option:hover {
       background-color: #2979aa;
     }
+    .container3 {
+      margin-top: 20px; /* Add space above container 3 */
+    }
+    .form-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
     body {
       background: url("{{ url_for('static', filename='assets/img/index_background.jpg') }}") no-repeat center center fixed;
       background-size: cover;
@@ -52,37 +60,61 @@
     <i class="fa fa-sign-out me-1"></i> LOGOUT
   </a>
   <main class="main-content position-relative border-radius-lg">
-    
-    <!-- Rows before the top container -->
-    <div class="container" style="margin-top: 50px; margin-bottom: 20px;">
+    <!-- Container 1: Display the parameter received from the index page -->
+    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px;">
       <p>This is the interactive report for {{ param }}</p>
     </div>
     
-    <!-- Container for Elements (Top Container) -->
-    <div class="container" style="margin-bottom: 20px;">
-      <!-- Top Container -->
-      <div style="display: flex; justify-content: space-between;">
-        <!-- Date_From Date Picker -->
-        <label for="date_from">Date_From:</label>
-        <input type="date" id="date_from" name="date_from">
-        
-        <!-- Date_To Date Picker -->
-        <label for="date_to">Date_To:</label>
-        <input type="date" id="date_to" name="date_to">
-        
-        <!-- Type Dropdown -->
-        <label for="type">Type:</label>
-        <select id="type" name="type">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
-        </select>
-      </div>
+    <!-- Container 2: Add form elements for filter and submit button -->
+    <div class="container container2">
+      <form action="{{ url_for('home_blueprint.fuseki') }}"method="POST" class="form-container">
+        <div>
+          <!-- Date_From Date Picker -->
+          <label for="date_from">Date_From:</label>
+          <input type="date" id="date_from" name="date_from">
+          
+          <!-- Date_To Date Picker -->
+          <label for="date_to">Date_To:</label>
+          <input type="date" id="date_to" name="date_to">
+          
+          <!-- Type Dropdown -->
+          <label for="type">Type:</label>
+          <select id="type" name="type">
+            <option value="option1">Gold</option>
+            <option value="option2">Platinum</option>
+            <option value="option3">Silver</option>
+          </select>
+          
+          <!-- New Dropdown for Artists -->
+          <label for="artists">Artists:</label>
+          <select id="artists" name="artists">
+            <option value="solo">Solo</option>
+            <option value="group">Group</option>
+          </select>
+          
+          <button type="submit" class="btn btn-primary" style="margin-left: 100px;">Submit</button>
+        </div>
+      </form>
     </div>
     
-    <!-- Empty Bottom Container -->
-    <div class="container">
-      <!-- You can add content here if needed in the future -->
+    <!-- Container 3: Display results from fuseki() method in a tabular form -->
+    <div class="container container3">
+      <!-- Display results here -->
+      <table>
+        <thead>
+          <tr>
+            <th>Artist</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Add rows of results here -->
+          {% for result in query_result %}
+            <tr>
+              <td>{{ result.artist_name }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </main>
 </body>
