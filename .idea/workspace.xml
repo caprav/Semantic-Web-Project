@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4d6bc99-8a75-48e3-8837-8958a4c88854" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/apps/templates/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/webScrapper.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webScrapper.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/home/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/home/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/two_hit_wonders.py" beforeDir="false" afterPath="$PROJECT_DIR$/two_hit_wonders.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,15 +38,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "novlatestcode",
-    "last_opened_file_path": "C:/Users/vinny/PycharmProjects/pythonProject/pyFuseki/pyfuseki"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Ramyahtml1&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/vinny/PycharmProjects/pythonProject/pyFuseki/pyfuseki&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="parser" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="webScrapper" />

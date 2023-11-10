@@ -8,9 +8,6 @@ from rdflib.graph import DATASET_DEFAULT_GRAPH_ID as default
 from rdflib.plugins.stores.sparqlstore import SPARQLUpdateStore
 from SPARQLWrapper import SPARQLWrapper, JSON, N3
 from pprint import pprint
-from two_hit_wonders import (
-    external_ontology_queries, return_all_isHitSongOf_artists
-)  #  query_dbpedia_isHitSongOf, query_foaf_artist_name
 from flask import Flask, render_template, request
 from apps.config import config_dict
 from apps import create_app, db
