@@ -66,16 +66,17 @@ def fuseki():
     # go and get the 4 parameters from interactive_report and pass it to
     # two_hit_wonders.py username = request.form['username'] password = request.form['password']
 
-    dateForm = Date()
+    dateForm = Date(request.form)
     # if dateForm.validate_on_submit():
     # session['startDate'] = dateForm.startDate.data
     # session['endDate'] = dateForm.endDate.data
-    print(dateForm.startDate.data)
+    start_date = request.form['start_date']
+    print(start_date)
 
     query_class = two_hit_wonders_queries(
-        str(dateForm.startDate.data), "2023-11-10", '"Platinum"@en', "both"
+        str(start_date), "2023-11-10", '"Platinum"@en', "both"
     )
-    
+
     try:
         print("inside fuseki")
         option = request.args.get("option")

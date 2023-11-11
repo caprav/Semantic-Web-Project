@@ -6,11 +6,11 @@ from wtforms.validators import DataRequired
 
 
 class Date(FlaskForm):
-    startDate = DateField('Start Date', # This is displayed on the page
+    start_date = DateField('Start Date',  # This is displayed on the page
+                           format='%Y-%m-%d',
+                           id='start_date',
+                           validators=[DataRequired()])
+    end_date = DateField('End Date',
                          format='%Y-%m-%d',
-                         id='start_date',
+                         id='end_date',
                          validators=[DataRequired()])
-    endDate = DateField('End Date',
-                        format='%Y-%m-%d',
-                        id='end_date',
-                        validators=[DataRequired()])

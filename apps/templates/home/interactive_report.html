@@ -1,121 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <!-- CSS Files -->
-  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet">
-  <style>
-    /* Add custom styles specific to interactive_report.html here */
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #f2f2f2;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-    .option {
-      background-color: #3498db;
-      color: #ffffff;
-      border: 1px solid #2979aa;
-      border-radius: 10px;
-      margin: 10px;
-      padding: 20px;
-      flex-basis: calc(33.33% - 20px);
-      text-align: center;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 16px;
-    }
-    .option a {
-      text-decoration: none;
-      color: inherit;
-    }
-    .option:hover {
-      background-color: #2979aa;
-    }
-    .container3 {
-      margin-top: 20px; /* Add space above container 3 */
-    }
-    .form-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    body {
-      background: url("{{ url_for('static', filename='assets/img/index_background.jpg') }}") no-repeat center center fixed;
-      background-size: cover;
-      margin: 0;
-      padding: 0;
-    }
-  </style>
-</head>
-<body class="g-sidenav-show bg-gray-100">
-  <a href="{{ url_for('authentication_blueprint.logout') }}" class="position-absolute top-0 end-0 m-4 text-white font-weight-bold">
-    <i class="fa fa-sign-out me-1"></i> LOGOUT
-  </a>
-  <main class="main-content position-relative border-radius-lg">
-    <!-- Container 1: Display the parameter received from the index page -->
-    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px;">
-      <p>This is the interactive report for {{ param }}</p>
-    </div>
-    
-    <!-- Container 2: Add form elements for filter and submit button -->
-    <div class="container container2">
-      <form action="{{ url_for('home_blueprint.fuseki') }}"method="POST" class="form-container">
-        <div>
-          <!-- Date_From Date Picker -->
+  <head>
+    <meta charset="utf-8" />
+    <!-- Font Awesome Icons -->
+    <script
+      src="https://kit.fontawesome.com/42d5adcbca.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- CSS Files -->
+    <link
+      id="pagestyle"
+      href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4"
+      rel="stylesheet"
+    />
+    <style>
+      /* Add custom styles specific to interactive_report.html here */
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f2f2f2;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .option {
+        background-color: #3498db;
+        color: #ffffff;
+        border: 1px solid #2979aa;
+        border-radius: 10px;
+        margin: 10px;
+        padding: 20px;
+        flex-basis: calc(33.33% - 20px);
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+      }
+      .option a {
+        text-decoration: none;
+        color: inherit;
+      }
+      .option:hover {
+        background-color: #2979aa;
+      }
+      .container3 {
+        margin-top: 20px; /* Add space above container 3 */
+      }
+      .form-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      body {
+        background: url("{{ url_for('static', filename='assets/img/index_background.jpg') }}")
+          no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body class="g-sidenav-show bg-gray-100">
+    <a
+      href="{{ url_for('authentication_blueprint.logout') }}"
+      class="position-absolute top-0 end-0 m-4 text-white font-weight-bold"
+    >
+      <i class="fa fa-sign-out me-1"></i> LOGOUT
+    </a>
+    <main class="main-content position-relative border-radius-lg">
+      <!-- Container 1: Display the parameter received from the index page -->
+      <div
+        class="container container1"
+        style="margin-top: 50px; margin-bottom: 20px"
+      >
+        <p>This is the interactive report for {{ param }}</p>
+      </div>
+
+      <!-- Container 2: Add form elements for filter and submit button -->
+      <div class="container container2">
+        <form role = "form"
+          action="{{ url_for('home_blueprint.fuseki') }}"
+          method="POST"
+          class="form-container"
+        >
+<!--          {{ form.hidden_tag() }}-->
+          <div class="mb-3">
+            {{ form.start_date(placeholder="Start Date",class="form-control") }}
+          </div>
+
+          <div>
+
+            <!-- Date_From Date Picker -->
+            <!--
           <label for="date_from">Date_From:</label>
           <input type="date" id="date_from" name="date_from">
-          
-          <!-- Date_To Date Picker -->
-          <label for="date_to">Date_To:</label>
-          <input type="date" id="date_to" name="date_to">
-          
-          <!-- Type Dropdown -->
-          <label for="type">Type:</label>
-          <select id="type" name="type">
-            <option value="option1">Gold</option>
-            <option value="option2">Platinum</option>
-            <option value="option3">Silver</option>
-          </select>
-          
-          <!-- New Dropdown for Artists -->
-          <label for="artists">Artists:</label>
-          <select id="artists" name="artists">
-            <option value="solo">Solo</option>
-            <option value="group">Group</option>
-          </select>
-          
-          <button type="submit" class="btn btn-primary" style="margin-left: 100px;">Submit</button>
-        </div>
-      </form>
-    </div>
-    
-    <!-- Container 3: Display results from fuseki() method in a tabular form -->
-    <div class="container container3">
-      <!-- Display results here -->
-      <table>
-        <thead>
-          <tr>
-            <th>Artist</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Add rows of results here -->
-          {% for result in query_result %}
+            -->
+
+            <!-- Date_To Date Picker -->
+            <label for="date_to">Date_To:</label>
+            <input type="date" id="date_to" name="date_to" />
+
+            <!-- Type Dropdown -->
+            <label for="type">Type:</label>
+            <select id="type" name="type">
+              <option value="option1">Gold</option>
+              <option value="option2">Platinum</option>
+              <option value="option3">Silver</option>
+            </select>
+
+            <!-- New Dropdown for Artists -->
+            <label for="artists">Artists:</label>
+            <select id="artists" name="artists">
+              <option value="solo">Solo</option>
+              <option value="group">Group</option>
+            </select>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              style="margin-left: 100px"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Container 3: Display results from fuseki() method in a tabular form -->
+      <div class="container container3">
+        <!-- Display results here -->
+        <table>
+          <thead>
+            <tr>
+              <th>Artist</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Add rows of results here -->
+            {% for result in query_result %}
             <tr>
               <td>{{ result.artist_name }}</td>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </main>
-</body>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
 </html>
