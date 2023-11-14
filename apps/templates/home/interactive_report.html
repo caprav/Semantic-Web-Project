@@ -84,47 +84,27 @@
         <form role = "form"
           action="{{ url_for('home_blueprint.fuseki') }}"
           method="POST"
-          class="form-container"
+          class="form-container" 
+          option=option
         >
-<!--          {{ form.hidden_tag() }}-->
-          <div class="mb-3">
-            {{ form.start_date(placeholder="Start Date",class="form-control") }}
-          </div>
-
-          <div>
-
+         {{ form.hidden_tag() }}
             <!-- Date_From Date Picker -->
-            <!--
-          <label for="date_from">Date_From:</label>
-          <input type="date" id="date_from" name="date_from">
-            -->
+            {{ form.start_date.label }}
+            {{ form.start_date(placeholder="Start Date") }}
 
-            <!-- Date_To Date Picker -->
-            <label for="date_to">Date_To:</label>
-            <input type="date" id="date_to" name="date_to" />
+            {{ form.end_date.label }}
+            {{ form.end_date(placeholder="End Date") }}
 
-            <!-- Type Dropdown -->
-            <label for="type">Type:</label>
-            <select id="type" name="type">
-              <option value="option1">Gold</option>
-              <option value="option2">Platinum</option>
-              <option value="option3">Silver</option>
-            </select>
-
-            <!-- New Dropdown for Artists -->
-            <label for="artists">Artists:</label>
-            <select id="artists" name="artists">
-              <option value="solo">Solo</option>
-              <option value="group">Group</option>
-            </select>
-
-            <button
-              type="submit"
-              class="btn btn-primary"
-              style="margin-left: 100px"
-            >
-              Submit
-            </button>
+            {{ form.type.label }}
+            {{ form.type() }}
+            
+            {{ form.artists.label }}
+            {{ form.artists() }}
+            
+            <input type="hidden" name="option" value="{{ option }}"> 
+            
+            <button type="submit" class="btn btn-primary" style="margin-left: 70px">Submit</button>
+            <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-primary" style="margin-left: 10px">Back</a>
           </div>
         </form>
       </div>

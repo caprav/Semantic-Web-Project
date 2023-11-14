@@ -1,5 +1,5 @@
 from apps.home import blueprint
-from flask import render_template, request, session
+from flask import render_template, request, session, redirect, url_for
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 from SPARQLWrapper import SPARQLWrapper, JSON, N3
@@ -7,8 +7,8 @@ from rdflib.plugins.stores.sparqlstore import SPARQLUpdateStore
 from rdflib import Graph, Namespace, Literal
 from rdflib.graph import DATASET_DEFAULT_GRAPH_ID as default
 from two_hit_wonders import two_hit_wonders_queries
-from apps.templates.forms import Date
-from wtforms.validators import DataRequired
+from apps.home.forms import Date
+from wtforms.validators import DataRequired 
 
 @blueprint.route("/index")
 @login_required
@@ -20,9 +20,10 @@ def index():
 @login_required
 def interactive_report():
     option = request.args.get("option")
-
+    dateForm = Date(request.form)
+    print(option)
     return render_template(
-        "home/interactive_report.html", option=option, segment="interactive_report"
+        "home/interactive_report.html", option=option, segment="interactive_report", form=dateForm
     )
 
 
@@ -59,27 +60,42 @@ def get_segment(request):
     except:
         return None
 
+@blueprint.route('/Return')
+def Return():
+    return redirect(url_for('home_blueprint.index')) 
+
 
 # Sharayu: Define a route to interact with Fuseki and DBpedia
 @blueprint.route("/get_fuseki", methods=["GET", "POST"])
 def fuseki():
     # go and get the 4 parameters from interactive_report and pass it to
     # two_hit_wonders.py username = request.form['username'] password = request.form['password']
+    #options = request.form.get("option") or request.args.get("option")
+    
 
     dateForm = Date(request.form)
     # if dateForm.validate_on_submit():
     # session['startDate'] = dateForm.startDate.data
     # session['endDate'] = dateForm.endDate.data
     start_date = request.form['start_date']
+    end_date = request.form['end_date']
+    type = request.form['type']
+    artists = request.form['artists']
+    
     print(start_date)
-
+    print(end_date)
+    print(type)
+    print(artists)
+    
     query_class = two_hit_wonders_queries(
         str(start_date), "2023-11-10", '"Platinum"@en', "both"
+        #str(start_date), str(end_date), str(type), str(artists)
     )
 
     try:
         print("inside fuseki")
-        option = request.args.get("option")
+        option = request.form.get("option")
+        print("chosen option is " + str(option))
         # Define SPARQL query to retrieve data from DBpedia
         sparql = SPARQLWrapper("https://dbpedia.org/sparql")
 
@@ -121,7 +137,7 @@ def fuseki():
         #   print(row)
 
         return render_template(
-            "home/interactive_report.html", option=option, query_result=fuseki_result
+            "home/interactive_report.html", option=option, query_result=fuseki_result, form=dateForm
         )
 
     except Exception as e:
