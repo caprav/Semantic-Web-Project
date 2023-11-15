@@ -86,11 +86,20 @@ def fuseki():
     print(end_date)
     print(type)
     print(artists)
-    
+
+    match type:
+        case "gold":
+            pass_type = '"Gold"@en'
+        case "silver":
+            pass_type = '"Silver"@en'
+        case _:
+            pass_type = '"Platinum"@en'
+
     query_class = two_hit_wonders_queries(
-        str(start_date), "2023-11-10", '"Platinum"@en', "both"
-        #str(start_date), str(end_date), str(type), str(artists)
+        str(start_date), end_date, pass_type, artists
     )
+
+    print(query_class.external_ontology_queries)
 
     try:
         print("inside fuseki")
@@ -111,7 +120,7 @@ def fuseki():
         print("Store, endpoints set, and store opened")
 
         g = Graph(store, identifier=default)
-
+        print(g)
         print("called graph method")
 
         for query in query_class.external_ontology_queries:
