@@ -3,11 +3,14 @@ class artist_sales_queries:
     We can add the option for album sales if worthwhile"""
 
     user_input_artist_search =""
+    query_dbpedia_matching_artists = ""
+    query_dbpedia_total_artist_sales = ""
 
     prefixes = ("prefix foaf: <http://xmlns.com/foaf/0.1/> "
                 "prefix dbo: <http://dbpedia.org/ontology/> "
                 "prefix dbp: <http://dbpedia.org/property/> "
                 )
+
 
     def __init__(self, user_input_artist_search):
         self.user_input_artist_search = user_input_artist_search
@@ -25,7 +28,6 @@ class artist_sales_queries:
                 "?artist_uri foaf:name ?artist_name "
                 "filter( contains (lcase(?artist_name), 'rush')) " # to replace rush user_input_artist_search.lower()
                 "} "
-
         )
 
         #  Just store all the foaf terms, then rerun a fuseki search to get the names to

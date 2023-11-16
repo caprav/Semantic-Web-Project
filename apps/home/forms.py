@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import DateField, SelectField
+from wtforms import DateField, SelectField, StringField
 from wtforms.validators import DataRequired
 
 # login and registration
@@ -24,3 +24,10 @@ class Date(FlaskForm):
         ('group', 'group'),
         ('both','both')
     ])
+    artist_search_string = StringField('Please enter an artist name to search')
+
+
+    # VC - to implement eventually in routes.py, we can state that
+    # dateForm.artist_searchResults.choices =
+    # [#The returned contents from our artist_sales.query_dbpedia_matching_artists formatted to strings#]
+    artist_searchResults = SelectField('Possible Matching Artists', choices=[])
