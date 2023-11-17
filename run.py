@@ -56,7 +56,7 @@ def fuseki():
     update_endpoint = "http://localhost:3030/music/update"
     store.open((query_endpoint, update_endpoint))
 
-    querysite = 'wikidata' # wikidata or dbpedia
+    querysite = 'dbpedia' # wikidata or dbpedia
     duration_hit_threshold = '"Platinum"@en'
     duration_start_date = "2007-01-01"
     duration_end_date = "2007-03-01"
@@ -81,12 +81,23 @@ def fuseki():
             wikidataEndPointUrl = 'https://query.wikidata.org/sparql'
 
 
-            tempQuery1 = (prefixes +
-                         'CONSTRUCT {?external_work <http://example.org/isAHitSongFrom> ?country} '
-                         # VC - p:P495 = country of origin https://www.wikidata.org/wiki/Property:P495
-                         'WHERE {?external_work p:P495 ?statement. '
-                         '?statement ps:P495 ?country '  # :P361 - PartOf                  
-                         '} LIMIT 100')
+            tempQuery1 = (prefixes + "CONSTRUCT {"
+                     "<http://dbpedia.org/resource/Rehab_(Amy_Winehouse_song)> owl:sameAs ?external_work_URI. } "
+                     "WHERE { "
+                     "<http://dbpedia.org/resource/Rehab_(Amy_Winehouse_song)> owl:sameAs ?external_work_URI. "
+                     "FILTER ((isUri(?external_work_URI) || isIri(?external_work_URI)) "
+                     "&& STRSTARTS(STR(?external_work_URI), STR(wd:)))"
+                     "} "
+                     )
+
+
+            """
+             'CONSTRUCT {?external_work <http://example.org/isAHitSongFrom> ?country} '
+             # VC - p:P495 = country of origin https://www.wikidata.org/wiki/Property:P495
+             'WHERE {?external_work p:P495 ?statement. '
+             '?statement ps:P495 ?country '  # :P361 - PartOf                  
+             '} LIMIT 100')
+             """
 
             tempQuery2 = (prefixes +
                          'CONSTRUCT {?external_work_URI <http://example.org/isAHitSongFrom> ?country} '
@@ -105,8 +116,8 @@ def fuseki():
                                 '&& STRSTARTS(STR(?external_work_URI), STR(wd:))) '                                       
                          '}}}}'
                          )
-            print(tempQuery2)
-            resultURL = wikidataEndPointUrl + '?query=' + urllib.parse.quote(tempQuery2)
+            print(tempQuery1)
+            resultURL = wikidataEndPointUrl + '?query=' + urllib.parse.quote(tempQuery1)
             print(resultURL)
             tempResult = g.parse(location=resultURL)
 
@@ -114,6 +125,14 @@ def fuseki():
             print('Querying DBPedia')
             sparql = SPARQLWrapper("https://dbpedia.org/sparql")
 
+            tempQuery3 = (prefixes + "CONSTRUCT {"
+                                     "<http://dbpedia.org/resource/Rehab_(Amy_Winehouse_song)> owl:sameAs ?external_work_URI. } "
+                                     "WHERE { "
+                                     "<http://dbpedia.org/resource/Rehab_(Amy_Winehouse_song)> owl:sameAs ?external_work_URI. "
+                                     "FILTER ((isUri(?external_work_URI) || isIri(?external_work_URI)) "
+                                     "&& STRSTARTS(STR(?external_work_URI), STR(wd:)))"
+                                     "} "
+                          )
             dbpediaquery= (prefixes +
                           'SELECT ?external_work_URI '
                           # VC - p:P495 = country of origin https://www.wikidata.org/wiki/Property:P495
@@ -125,8 +144,8 @@ def fuseki():
                           'FILTER( ?releaseDate > "' + duration_start_date + '"^^xsd:date '
                           '&& ?releaseDate < "' + duration_end_date + '"^^xsd:date '
                           '&& (isUri(?external_work_URI)) && STRSTARTS(STR(?external_work_URI), STR(wd:))) }')
-            print(dbpediaquery)
-            sparql.setQuery(dbpediaquery)
+            print(tempQuery3)
+            sparql.setQuery(tempQuery3)
             sparql.setReturnFormat(N3)
             query_result = sparql.query().convert()
             print(query_result)
