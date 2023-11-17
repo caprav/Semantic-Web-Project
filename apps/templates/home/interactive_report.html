@@ -1,3 +1,4 @@
+<!-- Code Developed by Ramya Sree S last modified on 11-15-2023-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,7 +15,6 @@
       rel="stylesheet"
     />
     <style>
-      /* Add custom styles specific to interactive_report.html here */
       .container {
         max-width: 900px;
         margin: 0 auto;
@@ -47,7 +47,7 @@
         background-color: #2979aa;
       }
       .container3 {
-        margin-top: 20px; /* Add space above container 3 */
+        margin-top: 20px; 
       }
       .form-container {
         display: flex;
@@ -71,12 +71,16 @@
       <i class="fa fa-sign-out me-1"></i> LOGOUT
     </a>
     <main class="main-content position-relative border-radius-lg">
-      <!-- Container 1: Display the parameter received from the index page -->
-      <div
-        class="container container1"
-        style="margin-top: 50px; margin-bottom: 20px"
-      >
-        <p>This is the interactive report for {{ param }}</p>
+      <div class="container container1" style="margin-top: 50px; margin-bottom: 20px">
+        {% if option == '1' %}
+          <p>This report is for displaying the results of Query 1, which gives you all the details about artists.</p>
+        {% elif option == '2' %}
+          <p>This is the second query result, and it's descrptive.</p>
+        {% elif option == '3' %}
+          <p>Another query has been chosen</p>
+        {% else %}
+          <p>Description for other option values.</p>
+        {% endif %}
       </div>
 
       <!-- Container 2: Add form elements for filter and submit button -->
