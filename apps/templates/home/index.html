@@ -66,13 +66,13 @@
     <!-- Container for Options -->
     <div class="container">
       <!-- Option 1 -->
-      <div class="option" title="This is Option 1">
-        <a href="{{ url_for('home_blueprint.interactive_report', option=1) }}">Option 1</a>
+      <div class="option" title="Hit Songmakers: This report will allow the user to search any time period and find the artist who have recorded hit songs. The user Can define a Hit by selecting if the artist recorded a Gold or Platinum single. Additionally, the user can Specify if they want to see the results that are by solo artists, group artists or Both.">
+        <a href="{{ url_for('home_blueprint.interactive_report', option=1) }}">Hit Songmakers</a>
       </div>
       
       <!-- Option 2 -->
-      <div class="option" title="This is Option 2">
-        <a href="{{ url_for('home_blueprint.interactive_report', option=2) }}">Option 2</a>
+      <div class="option" title="This report will allow user to search for a specific artist (group or solo). When the user enters a artist's name in the search and click submit, they will see all of the possible matching artists results in the Artists dropdown. The user can then select an artist and confirm to view the artists single sales. ">
+        <a href="{{ url_for('home_blueprint.Artists_sales_report', option=2) }}">Total Artist Sales</a>
       </div>
       <!-- Option 3 -->
       <div class="option" title="This is Option 3">

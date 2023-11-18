@@ -26,26 +26,7 @@
         flex-wrap: wrap;
         justify-content: space-between;
       }
-      .option {
-        background-color: #3498db;
-        color: #ffffff;
-        border: 1px solid #2979aa;
-        border-radius: 10px;
-        margin: 10px;
-        padding: 20px;
-        flex-basis: calc(33.33% - 20px);
-        text-align: center;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 16px;
-      }
-      .option a {
-        text-decoration: none;
-        color: inherit;
-      }
-      .option:hover {
-        background-color: #2979aa;
-      }
+      
       .container3 {
         margin-top: 20px; 
       }
@@ -72,15 +53,7 @@
     </a>
     <main class="main-content position-relative border-radius-lg">
       <div class="container container1" style="margin-top: 50px; margin-bottom: 20px">
-        {% if option == '1' %}
-          <p>This report is for displaying the results of Query 1, which gives you all the details about artists.</p>
-        {% elif option == '2' %}
-          <p>This is the second query result, and it's descrptive.</p>
-        {% elif option == '3' %}
-          <p>Another query has been chosen</p>
-        {% else %}
-          <p>Description for other option values.</p>
-        {% endif %}
+          <p>Hit Songmakers: This report will allow the user to search any time period and find the artist who have recorded hit songs. The user Can define a Hit by selecting if the artist recorded a Gold or Platinum single. Additionally, the user can Specify if they want to see the results that are by solo artists, group artists or Both.</p>
       </div>
 
       <!-- Container 2: Add form elements for filter and submit button -->
@@ -119,7 +92,7 @@
         <table>
           <thead>
             <tr>
-              <th>Artist</th>
+              <th>Artists</th>
             </tr>
           </thead>
           <tbody>

@@ -26,6 +26,15 @@ def interactive_report():
         "home/interactive_report.html", option=option, segment="interactive_report", form=dateForm
     )
 
+@blueprint.route("/Artists_sales_report")
+@login_required
+def Artists_sales_report():
+    option = request.args.get("option")
+    #dateForm = Date(request.form)   Need to call appropriate form class
+    print(option)
+    return render_template(
+        "home/Artists_sales_report.html", option=option, segment="Artists_sales_report"
+    )
 
 @blueprint.route("/<template>")
 @login_required
@@ -87,16 +96,8 @@ def fuseki():
     print(type)
     print(artists)
 
-    match type:
-        case "gold":
-            pass_type = '"Gold"@en'
-        case "silver":
-            pass_type = '"Silver"@en'
-        case _:
-            pass_type = '"Platinum"@en'
-
     query_class = two_hit_wonders_queries(
-        str(start_date), end_date, pass_type, artists
+        str(start_date), end_date, type, artists
     )
 
     print(query_class.external_ontology_queries)

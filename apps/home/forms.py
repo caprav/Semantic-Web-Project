@@ -15,17 +15,17 @@ class Date(FlaskForm):
                          id='end_date',
                          validators=[DataRequired()])
     type = SelectField('Type', choices=[
-        ('gold', 'gold'),
-        ('platinum', 'platinum'),
-        ('silver', 'silver')
+        ('"Gold"@en', 'Gold'),
+        ('"Platinum"@en', 'Platinum'),
+        ('"Silver"@en', 'Silver')
     ])
     artists = SelectField('Artists', choices=[
-        ('solo', 'solo'),
-        ('group', 'group'),
-        ('both','both')
+        ('solo', 'Solo'),
+        ('group', 'Group'),
+        ('both','Both')
     ])
-    artist_search_string = StringField('Please enter an artist name to search')
 
+    artist_search_string = StringField('Please enter an artist name to search')
 
     # VC - to implement eventually in routes.py, we can state that
     # dateForm.artist_searchResults.choices =
