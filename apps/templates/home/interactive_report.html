@@ -1,0 +1,113 @@
+<!-- Code Developed by Ramya Sree S last modified on 11-15-2023-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Font Awesome Icons -->
+    <script
+      src="https://kit.fontawesome.com/42d5adcbca.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- CSS Files -->
+    <link
+      id="pagestyle"
+      href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4"
+      rel="stylesheet"
+    />
+    <style>
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f2f2f2;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      
+      .container3 {
+        margin-top: 20px; 
+      }
+      .form-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      body {
+        background: url("{{ url_for('static', filename='assets/img/index_background.jpg') }}")
+          no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body class="g-sidenav-show bg-gray-100">
+    {% include "includes/sidenav.html" %}
+    
+
+    <a
+      href="{{ url_for('authentication_blueprint.logout') }}"
+      class="position-absolute top-0 end-0 m-4 text-white font-weight-bold"
+    >
+      <i class="fa fa-sign-out me-1"></i> LOGOUT
+    </a>
+    <main class="main-content position-relative border-radius-lg">
+      <div class="container container1" style="margin-top: 50px; margin-bottom: 20px">
+          <p>Hit Songmakers: This report will allow the user to search any time period and find the artist who have recorded hit songs. The user Can define a Hit by selecting if the artist recorded a Gold or Platinum single. Additionally, the user can Specify if they want to see the results that are by solo artists, group artists or Both.</p>
+      </div>
+
+      <!-- Container 2: Add form elements for filter and submit button -->
+      <div class="container container2">
+        <form role = "form"
+          action="{{ url_for('home_blueprint.fuseki') }}"
+          method="POST"
+          class="form-container" 
+          option=option
+        >
+         {{ form.hidden_tag() }}
+            <!-- Date_From Date Picker -->
+            {{ form.start_date.label }}
+            {{ form.start_date(placeholder="Start Date") }}
+
+            {{ form.end_date.label }}
+            {{ form.end_date(placeholder="End Date") }}
+
+            {{ form.type.label }}
+            {{ form.type() }}
+            
+            {{ form.artists.label }}
+            {{ form.artists() }}
+            
+            <input type="hidden" name="option" value="{{ option }}"> 
+            
+            <button type="submit" class="btn btn-primary" style="margin-left: 70px">Submit</button>
+            <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-primary" style="margin-left: 10px">Back</a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Container 3: Display results from fuseki() method in a tabular form -->
+      <div class="container container3">
+        <!-- Display results here -->
+        <table>
+          <thead>
+            <tr>
+              <th>Artists</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Add rows of results here -->
+            {% for result in query_result %}
+            <tr>
+              <td>{{ result.artist_name }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>
