@@ -43,4 +43,4 @@ if DEBUG:
 
 if __name__ == "__main__":
     # Change the port to the desired value (e.g., 8080)
-    app.run()
+    app.run(debug=True)

@@ -97,28 +97,42 @@ height: 300px; /* You need to set a height for the div if you haven't already */
 
     <div id="reviews-container" style="margin-top: 25%; padding: 20px;">
 
-        <a href="add-review.html" class="btn btn-success">Add a Review</a>    
-
-
-        {% for entry in reviews %}
-
-       
-       
-        <div class="review-item">
-            <div class="media">
-                <!-- Use JavaScript to generate a random image URL -->
-                <img src="" class="mr-3 review-image" alt="Image">
-
-                <div class="media-body">
-                    <h5 class="review-title">{{ entry.category }}</h5>
-                    <p class="review-text mb-0">by {{ entry.username }}</p>
-                    <p class="review-text"><small class="text-muted">{{ entry.date }}</small></p>
-                    <p class="review-text">{{ entry.description }}</p>
-                    <p class="review-text">{{ entry.details }}</p>
+      
+      
+        
+            <!-- Start of the new form -->
+            <form role="form" action="{{ url_for('reviews_blueprint.add_reviews') }}" method="post" option=option >
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <input type="text" id="category" name="category" class="form-control" style="width: 20%;" required>
                 </div>
-            </div>
+        
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" class="form-control" style="width: 20%;" rows="2" required></textarea>
+                </div>
+        
+                <div class="form-group">
+                    <label for="url">URL:</label>
+                    <input type="text" id="url" name="url" class="form-control" style="width: 20%;">
+                </div>
+        
+                <div class="form-group">
+                    <label for="details">Details:</label>
+                    <textarea id="details" name="details" class="form-control" style="width: 20%;" rows="2" required></textarea>
+                </div>
+        
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+            <!-- End of the new form -->
+        
         </div>
-        {% endfor %}
+        
+
+
+        
+ 
+     
     </div>
 </div>
 
@@ -128,32 +142,4 @@ height: 300px; /* You need to set a height for the div if you haven't already */
 
 
 {% endblock content %}
-
  
-{% block javascripts %}
- 
-<script> 
- 
- var reviewImages = document.querySelectorAll('.review-image');
-    var imageFolder = '../../static/assets/img/review/'; // Path to your image folder
-
-    // Array of image file names
-    var imageFiles = [];
-
-for (var i = 1; i <= 47; i++) {
-    imageFiles.push(i + '.jpg');
-}
-
-
-    reviewImages.forEach(function(image) {
-        // Generate a random index to select a random image file
-        var randomIndex = Math.floor(Math.random() * imageFiles.length);
-
-        // Set the src attribute of the image element to a random image URL
-        image.src = imageFolder + imageFiles[randomIndex];
-    });
-
-</script> 
- 
- 
-{% endblock javascripts %}

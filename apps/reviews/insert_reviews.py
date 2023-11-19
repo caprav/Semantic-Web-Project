@@ -48,7 +48,7 @@ def insert_review(conn, review_data):
     cur = conn.cursor()
     cur.execute(sql, review_data)
     conn.commit()
-    return cur.lastrowid
+    
 
 
 
@@ -69,7 +69,7 @@ def main():
             # Insert review data as needed
             # Example review data to insert
             review_data = ('test', 'Pop', 'Imagine Dragon Concert live on 20th Nov', 'http://example.com', 'Lets go', None,'2023-11-19')
-            inserted_id = insert_review(conn, review_data)
+            insert_review(conn, review_data)
 
             # Delete a review by ID as needed
             # delete_review(conn, inserted_id)
