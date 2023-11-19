@@ -118,13 +118,12 @@ height: 300px; /* You need to set a height for the div if you haven't already */
     var imageFolder = '../../static/assets/img/review/'; // Path to your image folder
 
     // Array of image file names
-    var imageFiles = [
-        '1.jpg',
-        '2.jpg',
-        '3.jpg',
-        // ... other image file names
-        '11.jpg'
-    ];
+    var imageFiles = [];
+
+for (var i = 1; i <= 47; i++) {
+    imageFiles.push(i + '.jpg');
+}
+
 
     reviewImages.forEach(function(image) {
         // Generate a random index to select a random image file
