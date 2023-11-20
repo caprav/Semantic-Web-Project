@@ -82,9 +82,9 @@ def fuseki():
 
 
             tempQuery1 = (prefixes + "CONSTRUCT {"
-                     "<http://dbpedia.org/resource/Rehab_(Amy_Winehouse_song)> owl:sameAs ?external_work_URI. } "
+                     "<http://dbpedia.org/resource/Beautiful_Liar> owl:sameAs ?external_work_URI. } "
                      "WHERE { "
-                     "<http://dbpedia.org/resource/Rehab_(Amy_Winehouse_song)> owl:sameAs ?external_work_URI. "
+                     "<http://dbpedia.org/resource/Beautiful_Liar> owl:sameAs ?external_work_URI. "
                      "FILTER ((isUri(?external_work_URI) || isIri(?external_work_URI)) "
                      "&& STRSTARTS(STR(?external_work_URI), STR(wd:)))"
                      "} "
@@ -104,9 +104,12 @@ def fuseki():
                          # VC - p:P495 = country of origin https://www.wikidata.org/wiki/Property:P495
                          'WHERE {?external_work_URI p:P495 ?statement. '
                          '?statement ps:P495 ?country '
-                         '{SERVICE <https://dbpedia.org/sparql> { '
+                         '{SERVICE <http://localhost:3030/#/dataset/music/query> {  '
                          'SELECT ?external_work_URI WHERE{'
-                         '?works a dbo:Song; '
+                         '<http://dbpedia.org/resource/Rehab_(Amy_Winehouse_song)> owl:sameAs ?external_work_URI. '
+                         '}}}}'
+                          )
+            """
                          'dbp:award ' + duration_hit_threshold + '; ' +
                          'dbo:releaseDate ?releaseDate; '
                          'owl:sameAs ?external_work_URI. '
@@ -116,8 +119,9 @@ def fuseki():
                                 '&& STRSTARTS(STR(?external_work_URI), STR(wd:))) '                                       
                          '}}}}'
                          )
-            print(tempQuery1)
-            resultURL = wikidataEndPointUrl + '?query=' + urllib.parse.quote(tempQuery1)
+                        """
+            print(tempQuery2)
+            resultURL = wikidataEndPointUrl + '?query=' + urllib.parse.quote(tempQuery2)
             print(resultURL)
             tempResult = g.parse(location=resultURL)
 
@@ -126,13 +130,31 @@ def fuseki():
             sparql = SPARQLWrapper("https://dbpedia.org/sparql")
 
             tempQuery3 = (prefixes + "CONSTRUCT {"
-                                     "<http://dbpedia.org/resource/Rehab_(Amy_Winehouse_song)> owl:sameAs ?external_work_URI. } "
+                                     "<http://dbpedia.org/resource/Beautiful_Liar> owl:sameAs ?external_work_URI. } "
                                      "WHERE { "
-                                     "<http://dbpedia.org/resource/Rehab_(Amy_Winehouse_song)> owl:sameAs ?external_work_URI. "
+                                     "<http://dbpedia.org/resource/Beautiful_Liar> owl:sameAs ?external_work_URI. "
                                      "FILTER ((isUri(?external_work_URI) || isIri(?external_work_URI)) "
                                      "&& STRSTARTS(STR(?external_work_URI), STR(wd:)))"
                                      "} "
                           )
+
+            tempQuery4 = (prefixes +
+                          "CONSTRUCT {"
+                                     "?dbpedia_works owl:sameAs ?external_work_URI. } "
+                                     "WHERE { "
+                                     "?dbpedia_works owl:sameAs ?external_work_URI. "
+                                     '?works a dbo:Song; '
+                                     'dbp:award "Platinum"@en; '   # user defines "hits" as either gold or platinum
+                                     'dbo:artist ?artist; '
+                                     'dbo:releaseDate ?releaseDate. ' 
+                                     '?artist a owl:Thing. '
+                                     'FILTER( ?releaseDate > "2007-01-01"^^xsd:date '
+                                     '&& ?releaseDate < "2007-11-01"^^xsd:date '
+                                     "(isUri(?external_work_URI) || isIri(?external_work_URI)) "
+                                     "&& STRSTARTS(STR(?external_work_URI), STR(wd:)))"
+                                     "} "
+                          )
+
             dbpediaquery= (prefixes +
                           'SELECT ?external_work_URI '
                           # VC - p:P495 = country of origin https://www.wikidata.org/wiki/Property:P495
@@ -169,6 +191,17 @@ def fuseki():
     #  VC - This line actually puts the info into Fuseki
     store.add_graph(tempResult)        #g)
 
+    fuseki_query = (prefixes + 'SELECT ?country '
+                         # VC - p:P495 = country of origin https://www.wikidata.org/wiki/Property:P495
+                         'WHERE { '
+                         '<http://dbpedia.org/resource/Rehab_(Amy_Winehouse_song)> owl:sameAs ?external_work_URI. '
+                         '{SERVICE <https://query.wikidata.org/> {  '
+                         'SELECT ?external_work_URI WHERE{'
+                         '?external_work_URI p:P495 ?statement. '
+                         '?statement ps:P495 ?country. '
+                         '}}}} '
+                    )
+    print(fuseki_query)
     #  VC - can't use sparql below, need to use the store (pointing to Fuseki), sparql is pointing to dbpedia
     fuseki_result = store.query(return_all_isHitSongOf_artists)
 
