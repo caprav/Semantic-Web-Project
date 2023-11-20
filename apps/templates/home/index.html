@@ -1,18 +1,136 @@
 <!-- Sharayu 
 landing Page
 -->
+  
 
-{% extends 'layouts/base.html' %}
-
-{% block title %} Dashboard {% endblock title %}
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <link href="{{ config.ASSETS_ROOT }}/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="{{ config.ASSETS_ROOT }}/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet">
+ 
+  
+</head>
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
+
+<style>
+
+ 
+
+.text-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: top;
+    justify-content: center;
+    color: white; /* Choose a color that contrasts well with your image */
+    text-align: center; /* Centers text horizontally */
+    padding: 20px; /* Adjust as needed */
+    font-weight: bold; 
+    /* Add more styling as needed */
+}
+
+.dashboard-header-intro {
+    color: white;
+}
+
+
+body {
+    margin: auto;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: auto;
+    background: linear-gradient(315deg, rgba(101,0,94,1) 3%, rgba(60,132,206,1) 38%, rgba(48,238,226,1) 68%, rgba(255,25,25,1) 98%);
+    animation: gradient 15s ease infinite;
+    background-size: 400% 400%;
+    background-attachment: fixed;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+.wave {
+    background: rgb(255 255 255 / 25%);
+    border-radius: 1000% 1000% 0 0;
+    position: fixed;
+    width: 200%;
+    height: 12em;
+    animation: wave 10s -3s linear infinite;
+    transform: translate3d(0, 0, 0);
+    opacity: 0.8;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.wave:nth-of-type(2) {
+    bottom: -1.25em;
+    animation: wave 18s linear reverse infinite;
+    opacity: 0.8;
+}
+
+.wave:nth-of-type(3) {
+    bottom: -2.5em;
+    animation: wave 20s -1s reverse infinite;
+    opacity: 0.9;
+}
+
+@keyframes wave {
+    2% {
+        transform: translateX(1);
+    }
+
+    25% {
+        transform: translateX(-25%);
+    }
+
+    50% {
+        transform: translateX(-50%);
+    }
+
+    75% {
+        transform: translateX(-25%);
+    }
+
+    100% {
+        transform: translateX(1);
+    }
+}
+
+
+
+</style>
 
 {% block content %}
 
  
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+ 
+
+    <div class="text-overlay">
+        <h1 class="dashboard-header-intro">Explore Top Music Insights</h1>
+        <p class="dashboard-header-intro">We bring together your favourite music data to connect your musical world.</p>
+        <p class="dashboard-header-intro-2">Go Explore.</p>
+    </div>  
+  </div>
   
   {% include "includes/sidenav.html" %}
 
@@ -35,7 +153,7 @@ landing Page
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
   
-  <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
+  
   
 
 {% endblock javascripts %}

@@ -20,26 +20,23 @@
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
             </div>
-            <span class="nav-link-text ms-1">DBPedia</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {% if 'explore' in segment %} active {% endif %}" href="/explore.html">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Explore Music</span>
+            <span class="nav-link-text ms-1">Reports</span>
           </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link {% if 'reviews' in segment %} active {% endif %}" href="{{ url_for('reviews_blueprint.reviews') }}">
+          <a class="nav-link {% if 'tables' in segment %} active {% endif %}" href="/savedreports.html">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+              <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
             </div>
-            <span class="nav-link-text ms-1">Reviews</span>
+            <span class="nav-link-text ms-1">Saved Reports</span>
           </a>
         </li>
+
+
+        
+
+      
        
         <li class="nav-item">
           <a class="nav-link {% if 'history' in segment %} active {% endif %}" href="{{ url_for('history_blueprint.history') }}">
@@ -51,13 +48,27 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link {% if 'tables' in segment %} active {% endif %}" href="/history.html">
+          <a class="nav-link {% if 'reviews' in segment %} active {% endif %}" href="{{ url_for('reviews_blueprint.reviews') }}">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+              <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
             </div>
-            <span class="nav-link-text ms-1">Federated</span>
+            <span class="nav-link-text ms-1">Reviews</span>
           </a>
         </li>
+
+<!--  
+
+
+
+        <li class="nav-item">
+          <a class="nav-link {% if 'explore' in segment %} active {% endif %}" href="/explore.html">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Explore Music</span>
+          </a>
+        </li>
+       -->
       
      
          
