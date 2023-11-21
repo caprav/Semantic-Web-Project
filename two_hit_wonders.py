@@ -35,12 +35,12 @@ class two_hit_wonders_queries:
         #  VC = need a way to reset this on a new selection from the drop down
         # should break out into separate method and call here and any time the query is executed
         if check_for_group_or_solo == "solo":
-            self.group_or_solo_query_string = "?artist a dbo:Person. "
+            self.group_or_solo_query_string = "?artist rdf:type dbo:Person. "
         elif check_for_group_or_solo == "group":
-            self.group_or_solo_query_string = "?artist a dbo:Group. "
+            self.group_or_solo_query_string = "?artist rdf:type dbo:Group. "
     # VC - Need to add a union statement here for dbo:Band (ex: https://dbpedia.org/page/Black_Eyed_Peas)
         else:
-            self.group_or_solo_query_string = "?artist a owl:Thing. "
+            self.group_or_solo_query_string = "?artist rdf:type owl:Thing. "
 
         # VC - constructs a triple in the format  ?song isHitSongOf ?artist
         self.query_dbpedia_isHitSongOf = (
@@ -53,9 +53,7 @@ class two_hit_wonders_queries:
                 "dbo:artist ?artist; "  # user defines "hits" as either gold or platinum
                 "dbo:releaseDate ?releaseDate. "
                 + self.group_or_solo_query_string
-                + 'FILTER( ?releaseDate > "'
-                + self.start_date
-                + '"^^xsd:date '
+                + 'FILTER( ?releaseDate > "' + self.start_date + '"^^xsd:date '
                   '&& ?releaseDate < "' + self.end_date + '"^^xsd:date)}'
         )
 
@@ -91,8 +89,12 @@ class two_hit_wonders_queries:
         return_all_isHitSongOfPrimaryArtist_artists = "temp"
 
         #  VC - here is where we can introduce a case statement
-        self.external_ontology_queries.append(self.query_dbpedia_isHitSongOf)
-        self.external_ontology_queries.append(query_foaf_artist_name)
+        #  self.external_ontology_queries.append(self.query_dbpedia_isHitSongOf)
+        #  self.external_ontology_queries.append(query_foaf_artist_name)
+        if self.query_dbpedia_isHitSongOf not in self.external_ontology_queries:
+            self.external_ontology_queries.append(self.query_dbpedia_isHitSongOf)
+        if query_foaf_artist_name not in self.external_ontology_queries:
+            self.external_ontology_queries.append(query_foaf_artist_name)
         #  external_ontology_queries.append(query_is_primary_song_artist)
 
     @property
@@ -105,10 +107,25 @@ class two_hit_wonders_queries:
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
             "PREFIX ex: <http://example.org/> "
             "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+            "PREFIX dbo: <http://dbpedia.org/ontology/> "
+            "PREFIX dbp: <http://dbpedia.org/property/> "
+            "PREFIX owl: <http://www.w3.org/2002/07/owl#> "
+            "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "
             "SELECT DISTINCT ?artist_name WHERE { "
-            "?song ex:isHitSongOf ?artist. "
+            "?song ex:isHitSongOf ?artist; "
+            "dbo:releaseDate ?releaseDate; "
+            "dbp:award " + self.hit_threshold + ". " +
+            self.group_or_solo_query_string +
             "?artist foaf:name ?artist_name "
+            'FILTER( ?releaseDate > "' + self.start_date + '"^^xsd:date '
+                  '&& ?releaseDate < "' + self.end_date + '"^^xsd:date)'
             "}"
         )
-        two_hit_wonders_queries.return_Fuseki_results_queries.append(return_all_isHitSongOf_artists)
+        print(return_all_isHitSongOf_artists)
+
+        """ VC - If we need to add more results return queries they can be added here:
+        if return_all_isHitSongOf_artists not in self.return_Fuseki_results_queries:
+            self.return_Fuseki_results_queries.append(return_all_isHitSongOf_artists)
+        """
+
         return return_all_isHitSongOf_artists  # two_hit_wonders_queries.return_Fuseki_results_queries
