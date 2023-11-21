@@ -1,6 +1,7 @@
 <!-- Code Developed by Ramya Sree S last modified on 11-15-2023-->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -11,72 +12,79 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet">
   <style>
-    /* Add custom styles specific to index.html here */
     .container {
-      max-width: 900px; /* Adjust the container width as needed */
+      max-width: 900px;
       margin: 0 auto;
       padding: 20px;
-      background-color: #f2f2f2; /* Set your desired background color */
-      border-radius: 15px; /* Adjust border radius for rounded corners */
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Add a box shadow for depth */
+      background-color: #f2f2f2;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
     }
+
     .option {
-      background-color: #3498db; /* Set your desired background color for options */
-      color: #ffffff; /* Set your desired text color for options */
-      border: 1px solid #2979aa; /* Add a border for options */
-      border-radius: 10px; /* Adjust border radius for rounded option boxes */
+      background-color: #3498db;
+      color: #ffffff;
+      border: 1px solid #2979aa;
+      border-radius: 10px;
       margin: 10px;
       padding: 20px;
-      flex-basis: calc(33.33% - 20px); /* Adjust the width to fit the number of options per row */
+      flex-basis: calc(33.33% - 20px);
       text-align: center;
       text-decoration: none;
       font-weight: bold;
       font-size: 16px;
     }
+
     .option a {
       text-decoration: none;
       color: inherit;
     }
-    /* Add styles for hover effects here */
+
     .option:hover {
-      background-color: #2979aa; /* Change background color on hover */
+      background-color: #2979aa;
     }
+
     body {
-      background: url("{{ url_for('static', filename='assets/img/index_background.jpg') }}") no-repeat center center fixed;
+      background: url("{{ url_for('static', filename='assets/img/Reports_background.jpg') }}") no-repeat center center fixed;
       background-size: cover;
       margin: 0;
       padding: 0;
     }
   </style>
 </head>
+
 <body class="g-sidenav-show bg-gray-100">
- 
+
   {% include "includes/sidenav.html" %}
- 
+
   <main class="main-content position-relative border-radius-lg">
-    <a href="{{ url_for('authentication_blueprint.logout') }}" class="position-absolute top-0 end-0 m-4 text-white font-weight-bold">
+    <a href="{{ url_for('authentication_blueprint.logout') }}"
+      class="position-absolute top-0 end-0 m-4 text-white font-weight-bold">
       <i class="fa fa-sign-out me-1"></i> LOGOUT
     </a>
-    <h1 class="mb-4">
-      <i class="fa fa-music me-2"></i> Music World
-    </h1>
-    <!-- Container for Objectives -->
+    
+    <h2 class="mb-4">
+       Available Reports
+    </h2>
+    <!--
     <div class="container" style="margin-bottom: 20px;">
       <h2 style="font-size: 18px; margin-bottom: 5px;">Objectives</h2>
-      <p style="margin-top: 5px;">This application provides you with interaction with different Musical sources and offers many interactive reports for you.</p>
-    </div>
-    <!-- Container for Options -->
-    <div class="container">
+      <p style="margin-top: 5px;">This application provides you with interaction with different Musical sources and
+        offers many interactive reports for you.</p>
+    </div> -->
+
+    <div class="container" style="margin-top: 80px;">
       <!-- Option 1 -->
-      <div class="option" title="Hit Songmakers: This report will allow the user to search any time period and find the artist who have recorded hit songs. The user Can define a Hit by selecting if the artist recorded a Gold or Platinum single. Additionally, the user can Specify if they want to see the results that are by solo artists, group artists or Both.">
+      <div class="option"
+        title="Hit Songmakers: This report will allow the user to search any time period and find the artist who have recorded hit songs. The user Can define a Hit by selecting if the artist recorded a Gold or Platinum single. Additionally, the user can Specify if they want to see the results that are by solo artists, group artists or Both.">
         <a href="{{ url_for('home_blueprint.interactive_report', option=1) }}">Hit Songmakers</a>
       </div>
-      
       <!-- Option 2 -->
-      <div class="option" title="This report will allow user to search for a specific artist (group or solo). When the user enters a artist's name in the search and click submit, they will see all of the possible matching artists results in the Artists dropdown. The user can then select an artist and confirm to view the artists single sales. ">
+      <div class="option"
+        title="This report will allow user to search for a specific artist (group or solo). When the user enters a artist's name in the search and click submit, they will see all of the possible matching artists results in the Artists dropdown. The user can then select an artist and confirm to view the artists single sales. ">
         <a href="{{ url_for('home_blueprint.Artists_sales_report', option=2) }}">Total Artist Sales</a>
       </div>
       <!-- Option 3 -->
@@ -110,4 +118,5 @@
     </div>
   </main>
 </body>
+
 </html>
