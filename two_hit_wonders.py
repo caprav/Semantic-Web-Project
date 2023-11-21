@@ -44,13 +44,14 @@ class two_hit_wonders_queries:
 
         # VC - constructs a triple in the format  ?song isHitSongOf ?artist
         self.query_dbpedia_isHitSongOf = (
-                "CONSTRUCT {?works <http://example.org/isHitSongOf> ?artist} "
+                "CONSTRUCT {?works <http://example.org/isHitSongOf> ?artist. "
+                "?works dbo:releaseDate ?releaseDate. "
+                "?works dbp:award " + self.hit_threshold + " . " +
+                self.group_or_solo_query_string + "}" +
                 "WHERE {?works a dbo:Song; "
-                "dbp:award "
-                + self.hit_threshold
-                + "; "
-                + "dbo:artist ?artist; "  # user defines "hits" as either gold or platinum
-                  "dbo:releaseDate ?releaseDate. "
+                "dbp:award " + self.hit_threshold + "; " +
+                "dbo:artist ?artist; "  # user defines "hits" as either gold or platinum
+                "dbo:releaseDate ?releaseDate. "
                 + self.group_or_solo_query_string
                 + 'FILTER( ?releaseDate > "'
                 + self.start_date
