@@ -7,7 +7,7 @@ from rdflib.plugins.stores.sparqlstore import SPARQLUpdateStore
 from rdflib import Graph, Namespace, Literal
 from rdflib.graph import DATASET_DEFAULT_GRAPH_ID as default
 from two_hit_wonders import two_hit_wonders_queries
-from apps.home.forms import Date
+from apps.home.forms import Hitsongsparams
 from wtforms.validators import DataRequired 
 from apps.history import insert_history
 import datetime
@@ -20,12 +20,15 @@ import os
 def index():
     return render_template("home/index.html", segment="index")
 
+###############
+    # Ramya Sree S  11/11/23
+    # Routes for Interactive_report and Artist salesreport
 
 @blueprint.route("/interactive_report")
 @login_required
 def interactive_report():
     option = request.args.get("option")
-    dateForm = Date(request.form)
+    dateForm = Hitsongsparams(request.form)
     print(option)
     return render_template(
         "home/interactive_report.html", option=option, segment="interactive_report", form=dateForm
@@ -35,11 +38,22 @@ def interactive_report():
 @login_required
 def Artists_sales_report():
     option = request.args.get("option")
-    #dateForm = Date(request.form)   Need to call appropriate form class
+    #dateForm = Hitsongsparams(request.form)   Need to call appropriate form class
     print(option)
     return render_template(
         "home/Artists_sales_report.html", option=option, segment="Artists_sales_report"
     )
+
+@blueprint.route("/reports")
+@login_required
+def reports():
+    return render_template("home/reports.html", segment="reports")
+
+@blueprint.route('/Return')
+def Return():
+    return redirect(url_for('home_blueprint.reports')) 
+
+################
 
 @blueprint.route("/<template>")
 @login_required
@@ -47,13 +61,11 @@ def route_template(template):
     try:
         if not template.endswith(".html"):
             template += ".html"
-
         # Detect the current page
         segment = get_segment(request)
-
         # Serve the file (if exists) from app/templates/home/FILE.html
         return render_template("home/" + template, segment=segment)
-
+    
     except TemplateNotFound:
         return render_template("home/page-404.html"), 404
 
@@ -65,34 +77,22 @@ def route_template(template):
 def get_segment(request):
     try:
         segment = request.path.split("/")[-1]
-
         if segment == "":
             segment = "index"
-
         return segment
-
     except:
         return None
-
-@blueprint.route('/Return')
-def Return():
-    return redirect(url_for('home_blueprint.index')) 
-
-    
 
 
 # Sharayu: Define a route to interact with Fuseki and DBpedia
 @blueprint.route("/get_fuseki", methods=["GET", "POST"])
 def fuseki():
-    # go and get the 4 parameters from interactive_report and pass it to
-    # two_hit_wonders.py username = request.form['username'] password = request.form['password']
-    #options = request.form.get("option") or request.args.get("option")
-    
 
-    dateForm = Date(request.form)
-    # if dateForm.validate_on_submit():
-    # session['startDate'] = dateForm.startDate.data
-    # session['endDate'] = dateForm.endDate.data
+    ###############
+    # Ramya Sree S  11/11/23
+    # Code to Capture form elements type, start date, end date, artist name
+    ################
+    dateForm = Hitsongsparams(request.form)
     start_date = request.form['start_date']
     end_date = request.form['end_date']
     type = request.form['type']
@@ -106,8 +106,8 @@ def fuseki():
     query_class = two_hit_wonders_queries(
         str(start_date), end_date, type, artists
     )
-
     print(query_class.external_ontology_queries)
+    ################
 
     ###############
     # Sharayu  11/18/23
@@ -125,8 +125,6 @@ def fuseki():
     # Get the matched word and capitalize the first letter
         matched_word = pattern.search(input_form).group(0).capitalize()
     
-    
-
     try:
         history_tbl_query = query_class.external_ontology_queries
         enclosed_query = f'"""{history_tbl_query}"""'
@@ -137,33 +135,19 @@ def fuseki():
     except Exception as e:
         print("Error adding row to the history table.", e)    
 
-    
-
-
-
-
-
     try:
         print("inside fuseki")
         option = request.form.get("option")
         print("chosen option is " + str(option))
         # Define SPARQL query to retrieve data from DBpedia
         sparql = SPARQLWrapper("https://dbpedia.org/sparql")
-
-        print("Sparql query built for DBpedia")
-
         sparql.setReturnFormat(JSON)
-
         store = SPARQLUpdateStore()
         query_endpoint = "http://localhost:3030/music/query"
         update_endpoint = "http://localhost:3030/music/update"
+        
         store.open((query_endpoint, update_endpoint))
-
-        print("Store, endpoints set, and store opened")
-
         g = Graph(store, identifier=default)
-        print(g)
-        print("called graph method")
 
         for query in query_class.external_ontology_queries:
             print(query)
@@ -172,23 +156,13 @@ def fuseki():
             query_result = sparql.query().convert()
             g.parse(query_result)
 
-        print("for each query called the for loop to get results")
-
-        # This line actually puts the info into Fuseki
         store.add_graph(g)
-
-        print("ading graph to store")
 
         # Can't use sparql below, need to use the store (pointing to Fuseki), sparql is pointing to dbpedia
         fuseki_result = store.query(query_class.return_fuseki_queries)
 
-        print("ading graph to store")
-
-        # for row in fuseki_result.bindings:
-        #   print(row)
-
         return render_template(
-            "home/interactive_report.html", option=option, query_result=fuseki_result, form=dateForm
+            "home/interactive_report.html", option=option,option1=1, query_result=fuseki_result, form=dateForm
         )
 
     except Exception as e:

@@ -1,54 +1,54 @@
 {% extends 'layouts/base.html' %}
 {% block title %} Dashboard {% endblock title %}
 {% block stylesheets %}
-    <style>
-        #suggestions {
-            position: relative;
-            width: 100%;
-            background-color: white;
-            border: 1px solid #ccc;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        #suggestions div {
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        #suggestions div:hover {
-            background-color: #f0f0f0;
-        }
-
-        .search-container {
+<style>
+    #suggestions {
         position: relative;
-        padding-bottom: 150px; /* Space for suggestions */
+        width: 100%;
+        background-color: white;
+        border: 1px solid #ccc;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    #suggestions div {
+        padding: 5px;
+        cursor: pointer;
+    }
+
+    #suggestions div:hover {
+        background-color: #f0f0f0;
+    }
+
+    .search-container {
+        position: relative;
+        padding-bottom: 150px;
+        /* Space for suggestions */
     }
 
     #results {
         position: absolute;
-        top: 100%; /* Position below the search bar */
+        top: 100%;
+        /* Position below the search bar */
         width: 100%;
     }
 
+    #result-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        /* Adjust the gap as needed */
+    }
 
-        #result-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px; /* Adjust the gap as needed */
-}
+    .result-item {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+        background-color: white;
+        border-radius: 10px;
+    }
 
-.result-item {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: center;
-    background-color: white;
-    border-radius: 10px;
-}
-
-
-
-    </style>
+</style>
 {% endblock stylesheets %}
 {% block content %}
 <div class="min-height-300 bg-primary position-absolute w-100"></div>
@@ -75,92 +75,83 @@
 </main>
 
 <script>
-function searchSuggestions(userInput) {
+    function searchSuggestions(userInput) {
 
-  var suggestionsDiv = document.getElementById('suggestions'); // Define suggestionsDiv here
+        var suggestionsDiv = document.getElementById('suggestions'); // Define suggestionsDiv here
 
-  
+        // Check if userInput is empty
+        if (userInput.trim() === '') {
+            suggestionsDiv.style.display = 'none'; // Hide suggestions when empty
+            return;
+        }
 
-  // Check if userInput is empty
-  if (userInput.trim() === '') {
-        suggestionsDiv.style.display = 'none'; // Hide suggestions when empty
-        return;
+        fetch('/search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_input: userInput }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                var suggestionsDiv = document.getElementById('suggestions');
+                suggestionsDiv.innerHTML = ''; // Clear existing suggestions
+
+                data.forEach(suggestion => {
+                    var suggestionItem = document.createElement('div');
+
+                    suggestionItem.textContent = suggestion;
+
+                    suggestionItem.addEventListener('click', function () {
+                        // Execute another POST request when clicked
+                        executeFusekiRequest(suggestion);
+                    });
+
+                    suggestionsDiv.appendChild(suggestionItem);
+                });
+
+                suggestionsDiv.style.display = data.length === 0 ? 'none' : 'block';
+            });
     }
 
 
-    fetch('/search', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ user_input: userInput }),
-    })
-    .then(response => response.json())
-    .then(data => {
+    document.addEventListener('click', function (event) {
+        var searchInput = document.querySelector('.form-control');
         var suggestionsDiv = document.getElementById('suggestions');
-        suggestionsDiv.innerHTML = ''; // Clear existing suggestions
-        
-     
 
-        data.forEach(suggestion => {
-            var suggestionItem = document.createElement('div');
-
-            suggestionItem.textContent = suggestion; 
-
-          
-        suggestionItem.addEventListener('click', function() {
-          // Execute another POST request when clicked
-          executeFusekiRequest(suggestion);
-        });
-
-            
-
-           
-            suggestionsDiv.appendChild(suggestionItem);
-        });
-
-        suggestionsDiv.style.display = data.length === 0 ? 'none' : 'block';
+        // Check if the click event is outside of the input and suggestions container
+        if (!searchInput.contains(event.target) && !suggestionsDiv.contains(event.target)) {
+            searchInput.value = ''; // Clear the input
+            suggestionsDiv.innerHTML = ''; // Clear suggestions
+            suggestionsDiv.style.display = 'none'; // Hide suggestions
+        }
     });
-}
 
 
-document.addEventListener('click', function(event) {
-    var searchInput = document.querySelector('.form-control');
-    var suggestionsDiv = document.getElementById('suggestions');
-
-    // Check if the click event is outside of the input and suggestions container
-    if (!searchInput.contains(event.target) && !suggestionsDiv.contains(event.target)) {
-        searchInput.value = ''; // Clear the input
-        suggestionsDiv.innerHTML = ''; // Clear suggestions
-        suggestionsDiv.style.display = 'none'; // Hide suggestions
+    function executeFusekiRequest(suggestion) {
+        fetch('/fueski_endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ suggestion: suggestion }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the second POST request here
+                displayResults(data);
+                console.log('Response from another POST request:', data);
+            });
     }
-});
 
 
-function executeFusekiRequest(suggestion) {
-  fetch('/fueski_endpoint', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ suggestion: suggestion }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Handle the response from the second POST request here
-      displayResults(data);
-      console.log('Response from another POST request:', data);
-    });
-}
+    function displayResults(data) {
+        // Get the results container div
+        var resultsDiv = document.getElementById('results');
 
-
-function displayResults(data) {
-    // Get the results container div
-    var resultsDiv = document.getElementById('results');
-
-    // Clear previous results and set the new text content
-    resultsDiv.textContent = data;
-}
+        // Clear previous results and set the new text content
+        resultsDiv.textContent = data;
+    }
 
 
 

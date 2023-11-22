@@ -1,17 +1,14 @@
-<!-- Sharayu 
-Display User History Info
--->
+<!-- Sharayu Display User History Info-->
 {% extends 'layouts/base.html' %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block stylesheets %}
 <style>
-  
     .highlight {
-        background-color: yellow; /* or any color of your choice */
+        background-color: yellow;
+        /* or any color of your choice */
     }
- 
 
     .history-container {
         background-color: #f8f9fa;
@@ -19,30 +16,37 @@ Display User History Info
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+
     .history-entry {
         border-bottom: 1px solid #e1e1e1;
         padding: 15px 0;
     }
+
     .history-entry:last-child {
         border-bottom: none;
     }
+
     .history-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding-bottom: 5px;
     }
+
     .history-title {
         font-size: 1.2em;
         color: #333;
     }
+
     .history-address {
         font-size: 0.9em;
         color: #666;
     }
+
     .search-box {
         margin-bottom: 20px;
     }
+
     .search-input {
         width: 100%;
         padding: 10px;
@@ -51,6 +55,12 @@ Display User History Info
         font-size: 1em;
     }
     
+    body {
+      background: url("{{ url_for('static', filename='assets/img/Reports_background.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
 </style>
 {% endblock %}
 
@@ -60,7 +70,8 @@ Display User History Info
     {% include "includes/navigation.html" %}
     <!-- Search Feature -->
     <div class="container mt-3 search-box">
-        <input type="text" id="historySearch" onkeyup="searchHistory()" class="search-input" placeholder="Search history..." title="Search history">
+        <input type="text" id="historySearch" onkeyup="searchHistory()" class="search-input"
+            placeholder="Search history..." title="Search history">
     </div>
     <!-- History Entries -->
     <div class="container history-container">
@@ -87,7 +98,6 @@ Display User History Info
         var input = document.getElementById('historySearch').value.toUpperCase();
         console.log('Input:', input);
 
-
         // Get the container that holds all history entries
         var historyContainer = document.querySelector('.history-container');
 
@@ -103,7 +113,7 @@ Display User History Info
             var textElements = entries[i].querySelectorAll('.history-title, .history-address, .history-date'); // Add other classes if needed
 
             // Check each text element for a match
-            textElements.forEach(function(element) {
+            textElements.forEach(function (element) {
                 var textValue = element.textContent || element.innerText;
                 var index = textValue.toUpperCase().indexOf(input);
 
@@ -124,5 +134,3 @@ Display User History Info
     }
 </script>
 {% endblock javascripts %}
-
-
