@@ -66,4 +66,14 @@ class hits_by_country_queries:
 
         fuseki_result = store.query(results_federated_query)
         print(fuseki_result)
-        return "" #  VC -return an array of key/value pairs "country, count"
+
+        return_result_dictionary = {}
+        for record in fuseki_result:
+            #  VC - this should get the portion returned by the SELECT ?country in results_federated_query above
+            temp_country = record.country.toPython()
+
+            #  VC - https://www.geeksforgeeks.org/python-increment-value-in-dictionary/
+            return_result_dictionary[temp_country] = return_result_dictionary.get(temp_country, 0) + 1
+
+        #  VC -return an array of key/value pairs "country, count"
+        return return_result_dictionary
