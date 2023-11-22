@@ -83,9 +83,9 @@ def main():
     history_data = ('test', '2022-11-01', '2023-11-15', 'Gold', 'Enrique', '2023-11-18', None, None, None, None)
     history_data1 = ('test', '2022-11-01', '2023-11-15', 'Silver', 'Lady Gaga', '2023-11-18', 'Value1', None, None, None)
     history_data2 = ('test', '2022-11-01', '2023-11-15', 'Platinum', 'Shakira', '2023-11-18', 'Value1', 'Value2', None, None)
-    inserted_history_id = insert_history(history_data)
-    inserted_history_id = insert_history( history_data1)
-    inserted_history_id = insert_history( history_data2)
+    load_history(history_data)
+    load_history( history_data1)
+    load_history( history_data2)
 
 if __name__ == '__main__':
     main()
