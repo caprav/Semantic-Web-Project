@@ -35,6 +35,15 @@
       justify-content: space-between;
       align-items: center;
     }
+    
+    .select-artist-container {
+      margin-right: auto; /* Push the artist selection to the left */
+    }
+
+    .confirm-button {
+      margin-left: auto; /* Push the Confirm button to the right */
+      margin-top: 10px;
+    }
 
     body {
       background: url("{{ url_for('static', filename='assets/img/Reports_background.jpg') }}") no-repeat center center fixed;
@@ -82,15 +91,16 @@
     <div id="container3" class="container container3">
       <form role="form" action="{{ url_for('dbpedia_blueprint.get_sales') }}" method="POST" class="form-container">
         <!-- Dropdown box for selecting artist -->
-        <div>
+        <div class="select-artist-container">
           <label for="selectArtist">Select Artist:</label>
           <select id="selectArtist" name="selectArtist">
             {% for artist in artist_names %}
             <option value="{{ artist }}">{{ artist }}</option>
             {% endfor %}
           </select>
-          <button type="submit" class="btn btn-primary" style="margin-left: 220px; margin-top: 10px">Confirm</button>
         </div>
+        <!-- Confirm button always on the right -->
+        <button type="submit" class="btn btn-primary confirm-button">Confirm</button>
       </form>
     </div>
 
@@ -117,10 +127,12 @@
     document.addEventListener('DOMContentLoaded', function () {
       var option1Value = document.getElementById('option1').value;
 
-      function hideResultContainer() {
+      function hideContainer3() {
         var container3 = document.getElementById('container3');
-        var container4 = document.getElementById('container4');
           container3.style.display = 'none';
+      }
+      function hideContainer4() {
+        var container4 = document.getElementById('container4');
           container4.style.display = 'none';
       }
 
@@ -136,11 +148,13 @@
 
       if (option1Value === '1') {
         showContainer3();
+        hideContainer4();
       } else if (option1Value === '2') {
         showContainer3();
         showContainer4();
       } else {
-        hideResultContainer();
+        hideContainer3();
+        hideContainer4();
       }
     });
   </script>
