@@ -44,6 +44,7 @@ def Artists_sales_report():
         "home/Artists_sales_report.html", option=option, segment="Artists_sales_report"
     )
 
+
 @blueprint.route("/reports")
 @login_required
 def reports():

@@ -1,0 +1,132 @@
+<!-- Code Developed by Ramya Sree S last modified on 11-15-2023-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.js"></script>
+  <style>
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .container3 {
+      margin-top: 20px;
+    }
+
+    .form-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    body {
+      background: url("{{ url_for('static', filename='assets/img/Reports_background.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .dataTables_filter {
+      float: right;
+      margin-bottom: 20px;
+    }
+
+    .dataTables_filter input {
+      border-radius: 5px;
+      padding: 5px;
+    }
+  </style>
+</head>
+
+<body class="hitsongartist bg-gray-100">
+  <a href="{{ url_for('authentication_blueprint.logout') }}"
+    class="position-absolute top-0 end-0 m-4 text-white font-weight-bold">
+    <i class="fa fa-sign-out me-1"></i> LOGOUT
+  </a>
+  <main class="main-content position-relative border-radius-lg">
+    <!-- Container 1: Query Description container-->
+    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px">
+      <p>
+        Hit Songmakers: This report will allow the user to search any time period and find the artist who has recorded
+        hit songs. The user can define a Hit by selecting if the artist recorded a Gold or Platinum single.
+        Additionally, the user can specify if they want to see the results that are by solo artists, group artists, or
+        Both.
+      </p>
+    </div>
+
+    <!-- Container 2: Add form elements for filter and submit button -->
+    <div class="container container2">
+      <form role="form" id="reportForm" action="{{ url_for('home_blueprint.fuseki') }}" method="POST" class="form-container"
+        option=option>
+        {{ form.hidden_tag() }}
+
+        {{ form.start_date.label }}
+        {{ form.start_date(placeholder="Start Date") }}
+
+        {{ form.end_date.label }}
+        {{ form.end_date(placeholder="End Date") }}
+
+        <input type="hidden" name="option" value="{{ option }}">
+        <input type="hidden" name="option1" value="{{ option1 }}">
+        <button type="submit" class="btn btn-primary" style="margin-left: 70px">Submit</button>
+        <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-primary" style="margin-left: 10px">Back</a>
+      </form>
+    </div>
+<!-- Container 3: Display results from fuseki() method in a tabular form
+     -->
+     <div class="container container4">
+        <!-- Display results here -->
+        <table>
+            <thead>
+                <tr>
+                    <th>United States:</th>
+                </tr>
+                <tr>
+                    <th> Canada:</th>
+                </tr>
+                <tr>
+                    <th> Mexico:</th>
+                </tr>
+                <tr>
+                    <th> Great Britain:</th>
+                </tr>
+                <tr>
+                    <th> Brazil:</th>
+                </tr>
+
+            </thead>
+           
+        </table>
+    </div>

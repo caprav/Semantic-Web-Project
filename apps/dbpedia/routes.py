@@ -43,7 +43,7 @@ def get_artist():
             artist_name = artist_name.replace('(', '').replace(')', '')
             artist_names.append(artist_name)
 
-    return render_template('home/Artists_sales_report.html', artist_names=artist_names) 
+    return render_template('home/Artists_sales_report.html', artist_names=artist_names, option1='1') 
 
 
 
@@ -85,4 +85,4 @@ def get_sales():
     if total_sales == 0:
         info_message = 'Sales information not available for the selected artist.'
 
-    return render_template('home/Artists_sales_report.html', total_sales=total_sales, info_message=info_message)
+    return render_template('home/Artists_sales_report.html', total_sales=total_sales, info_message=info_message, option1='2')
