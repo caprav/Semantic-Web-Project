@@ -11,15 +11,24 @@ from jinja2 import TemplateNotFound
 import os
 from SPARQLWrapper import SPARQLWrapper, JSON
 import urllib.parse
+from flask import session
 
-
+shared_list = {}
 
 
 @blueprint.route('/get_artist', methods=['POST'])
 @login_required
 def get_artist():
 
+    
+
     pattern = request.form['artistName']
+    # Remove both single quotes and double quotes from the pattern
+    pattern = pattern.replace("'", "").replace('"', "")
+    shared_list['artist_name'] = pattern
+
+    
+    
     sparql = SPARQLWrapper("https://dbpedia.org/sparql")
     sparql.setQuery("""
         PREFIX dbo: <http://dbpedia.org/ontology/>
@@ -34,6 +43,7 @@ def get_artist():
     sparql.setReturnFormat(JSON)
     suggestions = sparql.query().convert()
     artist_names = []
+    
 
     if suggestions and suggestions["results"]["bindings"]:
         for suggestion in suggestions["results"]["bindings"]:
@@ -71,6 +81,7 @@ def get_sales():
     
     total_sales = 0
     info_message = None
+    artist_name = session.get('selected_artist', None)
 
     if sales_info and 'results' in sales_info and 'bindings' in sales_info['results']:
         for sale in sales_info["results"]["bindings"]:
@@ -84,5 +95,7 @@ def get_sales():
     
     if total_sales == 0:
         info_message = 'Sales information not available for the selected artist.'
+
+    artist_name = session.get('selected_artist', None)    
 
     return render_template('home/Artists_sales_report.html', total_sales=total_sales, info_message=info_message, option1='2')
