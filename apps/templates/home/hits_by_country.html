@@ -105,20 +105,28 @@
 <!-- Container 3: Display results from fuseki() method in a tabular form
      -->
      <div id="resultContainer" class="container container3">
-
       <table class="table table-bordered" id="dataTable">
-        <thead>
-          <tr>
-            <th>Artist Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for result in query_result %}
-          <tr>
-            <td>{{ result['artist_name'].value }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
+          <thead>
+              <tr>
+                  <th>Country Name</th>
+                  <th>Hit Count</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% set country_counts = {} %}
+              {% for result in query_result %}
+                  {% set country = result['country'].toPython() %}
+                  {% set country_name = country.split("/")[-1] %}  {# Extracting the country code from the URI #}
+                  {% set hit_count = country_counts.get(country_name, 0) + 1 %}
+                  {% set country_counts = country_counts.update({country_name: hit_count}) or country_counts %}
+              {% endfor %}
+              {% for country, hit_count in country_counts.items() %}
+                  <tr>
+                      <td>{{ country }}</td>
+                      <td>{{ hit_count }}</td>
+                  </tr>
+              {% endfor %}
+          </tbody>
       </table>
       <button type="button" id="downloadButton" class="btn btn-primary"
         style="position: absolute; bottom: 10px; right: 10px;">Download Report</button>
