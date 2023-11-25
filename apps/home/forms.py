@@ -27,3 +27,14 @@ class Hitsongsparams(FlaskForm):
         ('group', 'Group'),
         ('both','Both')
     ])
+
+class Hitsongs_bycountry(FlaskForm):
+    start_date = DateField('Start Date',  
+                           format='%Y-%m-%d',
+                           id='start_date',
+                           validators=[DataRequired()])
+    end_date = DateField('End Date',
+                         format='%Y-%m-%d',
+                         id='end_date',
+                         validators=[DataRequired()])
+    

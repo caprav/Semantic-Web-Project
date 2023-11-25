@@ -79,16 +79,14 @@
     <!-- Container 1: Query Description container-->
     <div class="container container1" style="margin-top: 50px; margin-bottom: 20px">
       <p>
-        Hit Songmakers: This report will allow the user to search any time period and find the artist who has recorded
-        hit songs. The user can define a Hit by selecting if the artist recorded a Gold or Platinum single.
-        Additionally, the user can specify if they want to see the results that are by solo artists, group artists, or
-        Both.
+        His by country: This report will allow the user to search any time period and find the artist who has recorded
+        hit songs. 
       </p>
     </div>
 
     <!-- Container 2: Add form elements for filter and submit button -->
     <div class="container container2">
-      <form role="form" id="reportForm" action="{{ url_for('home_blueprint.fuseki') }}" method="POST" class="form-container"
+      <form role="form" id="reportForm" action="{{ url_for('home_blueprint.get_hitsbycountry') }}" method="POST" class="form-container"
         option=option>
         {{ form.hidden_tag() }}
 
@@ -106,27 +104,85 @@
     </div>
 <!-- Container 3: Display results from fuseki() method in a tabular form
      -->
-     <div class="container container4">
-        <!-- Display results here -->
-        <table>
-            <thead>
-                <tr>
-                    <th>United States:</th>
-                </tr>
-                <tr>
-                    <th> Canada:</th>
-                </tr>
-                <tr>
-                    <th> Mexico:</th>
-                </tr>
-                <tr>
-                    <th> Great Britain:</th>
-                </tr>
-                <tr>
-                    <th> Brazil:</th>
-                </tr>
+     <div id="resultContainer" class="container container3">
 
-            </thead>
-           
-        </table>
+      <table class="table table-bordered" id="dataTable">
+        <thead>
+          <tr>
+            <th>Artist Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in query_result %}
+          <tr>
+            <td>{{ result['artist_name'].value }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <button type="button" id="downloadButton" class="btn btn-primary"
+        style="position: absolute; bottom: 10px; right: 10px;">Download Report</button>
     </div>
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Initialize DataTable
+        $('#dataTable').DataTable({
+          // Enable searching
+          searching: true,
+          lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        });
+        
+        function hideResultContainer() {
+        document.getElementById('resultContainer').style.display = 'none';
+        } 
+        function showResultContainer() {
+        document.getElementById('resultContainer').style.display = 'block';
+        } 
+        var option1Value = document.getElementById('reportForm').elements['option1'].value;
+        if (option1Value === '1') {
+            showResultContainer();
+        } else {
+            hideResultContainer();
+        }
+
+        // Add event listener to the download button
+        document.getElementById('downloadButton').addEventListener('click', function () {
+          // Function to trigger the download
+          downloadReport();
+        });
+
+        // Function to trigger the download
+        function downloadReport() {
+          // Create a Blob containing the table data
+          var blob = new Blob([tableToCSV(document.getElementById('dataTable'))], { type: 'text/csv;charset=utf-8;' });
+
+          // Create a link element and trigger the download
+          var link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = 'hits_by_country.csv';
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+
+        // Function to convert the table to CSV
+        function tableToCSV(table) {
+          var csv = [];
+          var rows = table.getElementsByTagName('tr');
+          for (var i = 0; i < rows.length; i++) {
+            var row = [], cols = rows[i].querySelectorAll('td,th');
+            for (var j = 0; j < cols.length; j++)
+              row.push(cols[j].innerText);
+            csv.push(row.join(','));
+          }
+          return csv.join('\n');
+        }
+      });
+    </script>
+  </main>
+</body>
+
+</html>

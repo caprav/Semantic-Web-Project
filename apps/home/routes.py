@@ -7,7 +7,8 @@ from rdflib.plugins.stores.sparqlstore import SPARQLUpdateStore
 from rdflib import Graph, Namespace, Literal
 from rdflib.graph import DATASET_DEFAULT_GRAPH_ID as default
 from two_hit_wonders import two_hit_wonders_queries
-from apps.home.forms import Hitsongsparams
+from hits_by_country import hits_by_country_queries
+from apps.home.forms import Hitsongsparams,Hitsongs_bycountry
 from wtforms.validators import DataRequired 
 from apps.history import insert_history
 import datetime
@@ -44,6 +45,14 @@ def Artists_sales_report():
         "home/Artists_sales_report.html", option=option, segment="Artists_sales_report"
     )
 
+@blueprint.route("/hits_by_country")
+@login_required
+def hits_by_country():
+    dateForm = Hitsongs_bycountry(request.form)
+    option = request.args.get("option")
+    return render_template(
+        "home/hits_by_country.html", option=option, segment="hits_by_country", form=dateForm
+    )
 
 @blueprint.route("/reports")
 @login_required
@@ -164,6 +173,55 @@ def fuseki():
 
         return render_template(
             "home/interactive_report.html", option=option,option1=1, query_result=fuseki_result, form=dateForm
+        )
+
+    except Exception as e:
+        # Handle exceptions or errors here
+        print(f"Error: {str(e)}")
+        return "An error occurred while querying data.", 500
+
+
+    ###############
+    # Ramya Sree S  11/25/23
+    ################
+@blueprint.route("/get_hitsbycountry", methods=["GET", "POST"])
+def get_hitsbycountry():
+    try:
+        dateForm = Hitsongs_bycountry(request.form)
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+
+        print(start_date)
+        print(end_date)
+
+        query_class = hits_by_country_queries(str(start_date), str(end_date))
+        
+        sparql = SPARQLWrapper("https://dbpedia.org/sparql")
+        sparql.setReturnFormat(JSON)
+        
+        store = SPARQLUpdateStore()
+        query_endpoint = "http://localhost:3030/music/query"
+        update_endpoint = "http://localhost:3030/music/update"
+        store.open((query_endpoint, update_endpoint))
+        
+        g = Graph(store, identifier=default)
+        
+        sparql.setQuery(query_class.countries_external_ontology_queries[0])
+        sparql.setReturnFormat(N3)
+        query_result = sparql.query().convert()
+        g.parse(query_result)
+
+        store.add_graph(g)
+
+        option = request.form.get("option")
+        print("chosen option is " + str(option))
+
+        fuseki_result = store.query(query_class.return_federated_fuseki_wikidata())
+        print("fueski results are available")
+        for row in fuseki_result.bindings:
+            print(row)
+        return render_template(
+            "home/hits_by_country.html", option=option, option1=1, query_result=fuseki_result, form=dateForm
         )
 
     except Exception as e:

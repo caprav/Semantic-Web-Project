@@ -17,6 +17,7 @@ class hits_by_country_queries:
         "PREFIX ps:     <http://www.wikidata.org/prop/statement/> "
         "PREFIX wd:     <http://www.wikidata.org/entity/> "
         "PREFIX wds:    <http://www.wikidata.org/entity/statement/> "
+        "PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#> "
         )
 
     def __init__(self, start_date, end_date):
@@ -35,20 +36,23 @@ class hits_by_country_queries:
             'dbo:artist ?artist; '
             'dbo:releaseDate ?releaseDate. '
             '?artist a owl:Thing. '
-            'FILTER( ?releaseDate > ' + self.start_date + '"^^xsd:date '
-            '&& ?releaseDate < ' + self.end_date + '"^^xsd:date '
-            "(isUri(?external_work_URI) || isIri(?external_work_URI)) "
-            "&& STRSTARTS(STR(?external_work_URI), STR(wd:)))"
+            'FILTER( ?releaseDate > "' + str(self.start_date) + '"^^xsd:date '
+            '&& ?releaseDate < "' + str(self.end_date) + '"^^xsd:date '
+            '&& (isURI(?external_work_URI) || isIRI(?external_work_URI)) '
+            '&& STRSTARTS(STR(?external_work_URI), STR(wd:)))'
             "} "
-            )
+        )
+        self.countries_external_ontology_queries.clear()
+        if query_dbpedia_get_sameAs not in self.countries_external_ontology_queries:
+            self.countries_external_ontology_queries.append(query_dbpedia_get_sameAs)
 
     def return_federated_fuseki_wikidata(self):
-
+        print("inside hits by country wiki class")
         store = SPARQLUpdateStore()
         query_endpoint = "http://localhost:3030/music/query"
         update_endpoint = "http://localhost:3030/music/update"
         store.open((query_endpoint, update_endpoint))
-
+        print("store is open")
         results_federated_query = (self.prefixes +
             "SELECT DISTINCT ?external_work_URI ?country "
             "WHERE { "
@@ -58,22 +62,24 @@ class hits_by_country_queries:
             "?external_work_URI p:P495 ?statement. "
             "?statement ps:P495 ?country. "
             "} "
-            'FILTER( ?releaseDate > ' + self.start_date + '"^^xsd:date '
-            '&& ?releaseDate < ' + self.end_date + '"^^xsd:date '
+            'FILTER( ?releaseDate > "' + str(self.start_date) + '"^^xsd:date && ?releaseDate < "' + str(self.end_date) + '"^^xsd:date )'
             "} "
-            )
+        )
         print(results_federated_query)
 
         fuseki_result = store.query(results_federated_query)
-        print(fuseki_result)
-
+        print(1)
+        for row in fuseki_result.bindings:
+            print(row)
+        print(2)
         return_result_dictionary = {}
+        print(3)
         for record in fuseki_result:
             #  VC - this should get the portion returned by the SELECT ?country in results_federated_query above
             temp_country = record.country.toPython()
-
+            print(4)
             #  VC - https://www.geeksforgeeks.org/python-increment-value-in-dictionary/
             return_result_dictionary[temp_country] = return_result_dictionary.get(temp_country, 0) + 1
-
+        print(5)
         #  VC -return an array of key/value pairs "country, count"
         return return_result_dictionary
