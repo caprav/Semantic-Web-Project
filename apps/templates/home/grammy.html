@@ -1,0 +1,327 @@
+<!-- Sharayu: page for grammy awards-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+   
+  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <style>
+
+#suggestions {
+        position: relative;
+        width: 100%;
+        background-color: white;
+        border: 1px solid #ccc;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    #suggestions div {
+        padding: 5px;
+        cursor: pointer;
+    }
+
+    #suggestions div:hover {
+        background-color: #f0f0f0;
+    }
+
+
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    
+    }
+
+   
+ 
+
+    body {
+      background: url("{{ url_for('static', filename='assets/img/Reports_background.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+
+
+    /* Style for autocomplete suggestions */
+  .autocomplete-suggestions {
+    position: absolute;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    max-height: 150px;
+    overflow-y: auto;
+    width: 100%;
+  }
+
+  .autocomplete-suggestion {
+    padding: 8px;
+    cursor: pointer;
+  }
+
+  .autocomplete-suggestion:hover {
+    background-color: #f5f5f5;
+  }
+
+
+  .search-container {
+    position: relative;
+    max-width: 400px; 
+    margin: 0 auto; /* Center the container horizontally */
+    padding-bottom: 20px; /* Adjust the space for suggestions */
+  }
+
+  #awards-layout {
+    display: flex;
+   
+    justify-content: center; /* Center horizontally */
+    align-items: start; /* Center vertically */
+    gap: 20px; /* space between image and info */
+}
+
+ 
+
+ 
+
+.award-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+ /* Fixed image size and grid layout adjustments */
+#image-container {
+    flex: 0 0 200px; /* Fixed width for the image container */
+    padding: 10px;
+}
+
+.award-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Ensures image covers the area properly */
+}
+
+.centered-text {
+    text-align: center;
+}
+
+#awards-info-container {
+   
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between award items */
+    
+    overflow-y: auto; /* Scrollbar for overflowing content */
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 768px) {
+    #awards-layout {
+        flex-direction: column;
+    }
+
+    #image-container {
+        width: 100%; /* Full width on smaller screens */
+    }
+
+    #awards-info-container {
+        width: 100%;
+    }
+
+}
+
+
+
+  </style>
+</head>
+
+<body class="reportsales bg-gray-100">
+  
+  <div class="position-absolute top-0 end-0 m-4 d-flex align-items-center">
+   
+
+    <a href="{{ url_for('authentication_blueprint.logout') }}" class="ml-3 text-white font-weight-bold">
+        <i class="fa fa-sign-out me-1"></i> LOGOUT
+    </a>
+</div>
+
+  <main class="main-content position-relative border-radius-lg">
+   
+      <div class="container" style="margin-top: 50px; margin-bottom: 20px">
+        <div class="centered-text">
+          <p>Enter Artist or Band Name to display Grammy Information</p>
+      </div>
+      
+      </div>
+    
+
+    </div>
+  
+  
+  
+
+     <!--  
+    Sharayu :  Search suggestions container and logout butn
+    -->
+  
+     
+    <div class="col-lg-7 search-container">
+      <div class="row">
+          <div class="col-8"> 
+              <div class="input-group"> 
+                  <input type="text" class="form-control" placeholder="Search..." onkeyup="searchSuggestions(this.value)">
+              </div>
+              <div id="suggestions"></div> 
+          </div>
+          <div class="col-4"> 
+              <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-sm btn-primary float-end">Back</a> <!-- Use btn-sm for a smaller button -->
+          </div>
+      </div>
+  </div>
+  
+ 
+      <div id="suggestions"></div>
+      <div id="results">
+          <div class="row" id="result-grid">
+              <!-- Search results will be displayed here -->
+          </div>
+      </div>
+  </div>
+  
+
+          <div id="awards-layout">
+            <div id="image-container"></div>
+            <div id="awards-info-container"></div>
+        </div>
+        
+ 
+  </main>
+
+  <script>
+  
+   
+    function searchSuggestions(userInput) {
+
+        var suggestionsDiv = document.getElementById('suggestions'); // Define suggestionsDiv here
+
+        // Check if userInput is empty
+        if (userInput.trim() === '') {
+            suggestionsDiv.style.display = 'none'; // Hide suggestions when empty
+            return;
+        }
+
+        fetch('/search_grammy_artist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_input: userInput }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                var suggestionsDiv = document.getElementById('suggestions');
+                suggestionsDiv.innerHTML = ''; // Clear existing suggestions
+
+                data.forEach(suggestion => {
+                    var suggestionItem = document.createElement('div');
+
+                    suggestionItem.textContent = suggestion;
+
+                    suggestionItem.addEventListener('click', function () {
+                        // Execute another POST request when clicked
+                        
+                        
+                        executeFusekiRequest(suggestion);
+                        document.getElementById('search').value = suggestion;
+                    });
+
+                    suggestionsDiv.appendChild(suggestionItem);
+                });
+
+                suggestionsDiv.style.display = data.length === 0 ? 'none' : 'block';
+            });
+    }
+
+
+    document.addEventListener('click', function (event) {
+        var searchInput = document.querySelector('.form-control');
+        var suggestionsDiv = document.getElementById('suggestions');
+
+        // Check if the click event is outside of the input and suggestions container
+        if (!searchInput.contains(event.target) && !suggestionsDiv.contains(event.target)) {
+            searchInput.value = ''; // Clear the input
+            suggestionsDiv.innerHTML = ''; // Clear suggestions
+            suggestionsDiv.style.display = 'none'; // Hide suggestions
+        }
+    });
+
+    function executeFusekiRequest(suggestion) {
+        fetch('/wikidata_endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ suggestion: suggestion }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the second POST request here
+                displayAwards(data);
+                console.log('Response from another POST request:', data);
+            });
+    }
+ 
+
+ 
+
+      function displayAwards(data) {
+    const imageContainer = document.getElementById('image-container');
+    const awardsInfoContainer = document.getElementById('awards-info-container');
+
+    // Clear existing content
+    imageContainer.innerHTML = '';
+    awardsInfoContainer.innerHTML = '';
+
+    // Set the image
+    const imgElement = document.createElement('img');
+    imgElement.src = data.image;
+    imgElement.className = 'award-image';
+    imageContainer.appendChild(imgElement);
+
+    // List each award
+    data.awards.forEach(award => {
+        const awardElement = document.createElement('div');
+        awardElement.className = 'award-item';
+        awardElement.innerHTML = `<strong>${award.awardLabel}</strong> (${new Date(award.year).getFullYear()})`;
+        awardsInfoContainer.appendChild(awardElement);
+    });
+}
+
+ 
+
+ 
+
+
+
+
+
+
+ 
+
+
+ 
+  </script>
+</body>
+
+</html>

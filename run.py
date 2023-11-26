@@ -12,6 +12,7 @@ from flask import Flask, render_template, request
 from apps.config import config_dict
 from apps import create_app, db
 import jsonify
+from apps.preprocess import db_dict
 
 
 # WARNING: Don't run with debug turned on in production!
@@ -29,6 +30,9 @@ except KeyError:
 
 app = create_app(app_config)
 Migrate(app, db)
+ReviewStatus = db_dict["ReviewStatus"]
+ArtistStatus = db_dict["ArtistStatus"]
+HistoryStatus =  db_dict["HistoryStatus"]
 
 if not DEBUG:
     Minify(app=app, html=True, js=False, cssless=False)
@@ -39,6 +43,10 @@ if DEBUG:
     app.logger.info("Page Compression = " + "FALSE" if DEBUG else "TRUE")
     app.logger.info("DBMS             = " + app_config.SQLALCHEMY_DATABASE_URI)
     app.logger.info("ASSETS_ROOT      = " + app_config.ASSETS_ROOT)
+    app.logger.info("Reviews Table Status      = " + ReviewStatus)
+    app.logger.info("Artist Table Status      = " + ArtistStatus)
+    app.logger.info("History Table Status      = " + HistoryStatus)
+
 
 
 if __name__ == "__main__":
