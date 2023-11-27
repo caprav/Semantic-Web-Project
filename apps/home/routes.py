@@ -257,10 +257,11 @@ def Grammy():
         
         g = Graph(store, identifier=default)
 
-        sparql.setQuery(query_class.gbc_external_ontology_queries[0])
-        sparql.setReturnFormat(N3)
-        query_result = sparql.query().convert()
-        g.parse(query_result)
+        for query in query_class.gbc_external_ontology_queries:
+            sparql.setQuery(query)  #  (query_class.gbc_external_ontology_queries[0])
+            sparql.setReturnFormat(N3)
+            query_result = sparql.query().convert()
+            g.parse(query_result)
         print(g)
 
         store.add_graph(g)
