@@ -8,7 +8,8 @@ from rdflib import Graph, Namespace, Literal
 from rdflib.graph import DATASET_DEFAULT_GRAPH_ID as default
 from two_hit_wonders import two_hit_wonders_queries
 from hits_by_country import hits_by_country_queries
-from apps.home.forms import Hitsongsparams,Hitsongs_bycountry
+from grammy_by_city import grammy_by_city_queries
+from apps.home.forms import Hitsongsparams,Hitsongs_bycountry,GrammyArtists
 from wtforms.validators import DataRequired 
 from apps.history import insert_history
 import datetime
@@ -52,6 +53,15 @@ def hits_by_country():
     option = request.args.get("option")
     return render_template(
         "home/hits_by_country.html", option=option,query_result={}, segment="hits_by_country", form=dateForm
+    )
+
+@blueprint.route("/Grammy_Artists")
+@login_required
+def Grammy_Artists():
+    categoryForm= GrammyArtists(request.form)
+    option = request.args.get("option")
+    return render_template(
+        "home/Grammy_Artists.html", option=option,query_result={}, segment="Grammy_Artists", form= categoryForm
     )
 
 @blueprint.route("/reports")
@@ -222,6 +232,48 @@ def get_hitsbycountry():
         return render_template(
             "home/hits_by_country.html", option=option, option1='1', query_result=fuseki_result, form=dateForm
         )
+
+    except Exception as e:
+        # Handle exceptions or errors here
+        print(f"Error: {str(e)}")
+        return "An error occurred while querying data.", 500
+
+ ###############
+    # Ramya Sree S  11/26/23
+    ################
+@blueprint.route("/get_Grammy", methods=["GET", "POST"])
+def Grammy():
+    try:
+        categoryForm= GrammyArtists(request.form)
+        artists =  request.form['artists']
+        query_class = grammy_by_city_queries(artists)
+        sparql = SPARQLWrapper("https://dbpedia.org/sparql")
+        sparql.setReturnFormat(JSON)
+        
+        store = SPARQLUpdateStore()
+        query_endpoint = "http://localhost:3030/music/query"
+        update_endpoint = "http://localhost:3030/music/update"
+        store.open((query_endpoint, update_endpoint))
+        
+        g = Graph(store, identifier=default)
+        
+        
+        sparql.setQuery(query_class.gbc_external_ontology_queries[0])
+        sparql.setReturnFormat(N3)
+        query_result = sparql.query().convert()
+        g.parse(query_result)
+        print(g)
+
+        #store.add_graph(g)
+
+        option = request.form.get("option")
+        print("chosen option is " + str(option))
+
+        fuseki_result = {}
+        print("fueski results are available")
+        return render_template(
+            "home/Grammy_Artists.html", option=option, option1='1', query_result=fuseki_result, form=categoryForm
+        ) 
 
     except Exception as e:
         # Handle exceptions or errors here

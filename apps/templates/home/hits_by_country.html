@@ -90,16 +90,16 @@
         class="form-container" option=option>
         {{ form.hidden_tag() }}
 
-        {{ form.start_date.label }}
+        {{ form.start_date.label(style="margin-top: 10px;") }}
         {{ form.start_date(placeholder="Start Date") }}
 
-        {{ form.end_date.label }}
+        {{ form.end_date.label(style="margin-top: 10px;") }}
         {{ form.end_date(placeholder="End Date") }}
 
         <input type="hidden" name="option" value="{{ option }}">
         <input type="hidden" name="option1" value="{{ option1 }}">
-        <button type="submit" class="btn btn-primary" style="margin-left: 70px">Submit</button>
-        <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-primary" style="margin-left: 10px">Back</a>
+        <button type="submit" class="btn btn-primary" style="margin-left: 300px; margin-top: 10px">Submit</button>
+        <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-primary" style="margin-left: 10px; margin-top: 10px">Back</a>
       </form>
     </div>
     <!-- Container 3: Display results from fuseki() method in a tabular form

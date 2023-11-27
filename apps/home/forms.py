@@ -38,3 +38,9 @@ class Hitsongs_bycountry(FlaskForm):
                          id='end_date',
                          validators=[DataRequired()])
     
+class GrammyArtists(FlaskForm):
+    artists = SelectField('Artists', choices=[
+        ('solo', 'Solo'),
+        ('group', 'Group'),
+        ('both','Both')
+    ])

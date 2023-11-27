@@ -67,7 +67,7 @@ def main():
     database = os.path.join(basedir, 'db.sqlite3')
     
     # Create a database connection
-    conn = create_connection(database)
+    conn = create_connection()
     if conn is not None:
         with conn:
             # Create table

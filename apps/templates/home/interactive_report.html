@@ -92,16 +92,16 @@
         option=option>
         {{ form.hidden_tag() }}
 
-        {{ form.start_date.label }}
+        {{ form.start_date.label(style="margin-top: 10px;") }}
         {{ form.start_date(placeholder="Start Date") }}
 
-        {{ form.end_date.label }}
+        {{ form.end_date.label(style="margin-top: 10px;") }}
         {{ form.end_date(placeholder="End Date") }}
 
-        {{ form.type.label }}
+        {{ form.type.label(style="margin-top: 10px;") }}
         {{ form.type() }}
 
-        {{ form.artists.label }}
+        {{ form.artists.label(style="margin-top: 10px;") }}
         {{ form.artists() }}
 
         <input type="hidden" name="option" value="{{ option }}">
