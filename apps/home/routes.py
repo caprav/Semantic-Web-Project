@@ -51,7 +51,7 @@ def hits_by_country():
     dateForm = Hitsongs_bycountry(request.form)
     option = request.args.get("option")
     return render_template(
-        "home/hits_by_country.html", option=option, segment="hits_by_country", form=dateForm
+        "home/hits_by_country.html", option=option,query_result={}, segment="hits_by_country", form=dateForm
     )
 
 @blueprint.route("/reports")
@@ -216,12 +216,11 @@ def get_hitsbycountry():
         option = request.form.get("option")
         print("chosen option is " + str(option))
 
-        fuseki_result = store.query(query_class.return_federated_fuseki_wikidata())
+        fuseki_result = query_class.return_federated_fuseki_wikidata()
         print("fueski results are available")
-        for row in fuseki_result.bindings:
-            print(row)
+        
         return render_template(
-            "home/hits_by_country.html", option=option, option1=1, query_result=fuseki_result, form=dateForm
+            "home/hits_by_country.html", option=option, option1='1', query_result=fuseki_result, form=dateForm
         )
 
     except Exception as e:

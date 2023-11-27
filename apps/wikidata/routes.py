@@ -13,7 +13,6 @@ import sys
 from apps import db, login_manager
 from apps.wikidata import blueprint
 from  apps.wikidata.insert_artist import select_all_artists,create_connection
-import requests
 from SPARQLWrapper import SPARQLWrapper, JSON
 
  
