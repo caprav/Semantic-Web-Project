@@ -1,3 +1,6 @@
+from rdflib.plugins.stores.sparqlstore import SPARQLUpdateStore
+
+
 class grammy_by_city_queries:
     gbc_external_ontology_queries = []
     gbc_return_Fuseki_results_queries = []
@@ -10,15 +13,24 @@ class grammy_by_city_queries:
                 )
 
     query_dbpedia_grammys_by_city_solo = (prefixes +
-        "SELECT distinct count(?artist) ?hometown "
+        "CONSTRUCT { "
+        "?artist dbo:wikiPageWikiLink dbc:Grammy_Award_winners;  "
+        "rdf:type dbo:Person; "
+        "dbo:birthPlace ?hometown_name .  "
+        "}"
         "WHERE { "
         "?artist dbo:wikiPageWikiLink dbc:Grammy_Award_winners; "
         "rdf:type dbo:Person; "
         "dbo:birthPlace ?hometown . "
-        "?hometown rdf:type schema:City .} "
+        "?hometown rdf:type schema:City; "
+        "rdfs:label ?hometown_name "
+        "FILTER (lang(?hometown_name) = 'en') "
+        "} "
         )
 
     query_dbpedia_grammys_by_city_group = (prefixes +
+        "SELECT distinct count(?artist) ?hometown "
+        "WHERE { "
         "?artist dbo:wikiPageWikiLink dbc:Grammy_Award_winners; "
         "rdf:type dbo:Group; "
         "dbo:hometown ?hometown . "
@@ -48,3 +60,54 @@ class grammy_by_city_queries:
             self.gbc_external_ontology_queries.append(self.query_dbpedia_grammys_by_city_group)
         else:
             self.gbc_external_ontology_queries.append(self.query_dbpedia_grammys_by_city_both)
+
+    def return_fuseki_city_info(self):
+        print("inside grammy by city class")
+        store = SPARQLUpdateStore()
+        query_endpoint = "http://localhost:3030/music/query"
+        update_endpoint = "http://localhost:3030/music/update"
+        store.open((query_endpoint, update_endpoint))
+        print("store is open")
+
+        results_grammy_city_query_solo = (self.prefixes +
+            "SELECT ?hometown_name (COUNT(?artist) AS ?total)  "
+            "WHERE { "
+            "?artist dbo:wikiPageWikiLink dbc:Grammy_Award_winners; "
+            "rdf:type dbo:Person; "
+            "dbo:birthPlace ?hometown_name. "
+            "} "
+            "GROUP BY ?hometown_name "
+            )
+        results_grammy_city_query_group = (self.prefixes +
+            " "
+            " "
+            )
+
+        results_grammy_city_query_both = (self.prefixes +
+            " "
+            " "
+            )
+        print(results_grammy_city_query_solo)
+
+        """
+        if self.check_for_group_or_solo == "solo":
+            fuseki_result = store.query(results_grammy_city_query_solo)
+        elif self.check_for_group_or_solo == "group":
+            fuseki_result = store.query(results_grammy_city_query_group)
+        else:
+            fuseki_result = store.query(results_grammy_city_query_group)
+        """
+        fuseki_result = store.query(results_grammy_city_query_solo)
+        print(fuseki_result)
+
+        return_result_dictionary = {}
+        for record in fuseki_result:
+            print(1)
+            print(record)
+            temp_city = record.hometown_name.toPython()
+            temp_count = record.total
+            print(temp_city + "\t" + temp_count)
+            return_result_dictionary[temp_city] = temp_count
+
+        print(return_result_dictionary)
+        return return_result_dictionary

@@ -244,11 +244,11 @@ def get_hitsbycountry():
 @blueprint.route("/get_Grammy", methods=["GET", "POST"])
 def Grammy():
     try:
-        categoryForm= GrammyArtists(request.form)
-        artists =  request.form['artists']
+        categoryForm = GrammyArtists(request.form)
+        artists = request.form['artists']
         query_class = grammy_by_city_queries(artists)
         sparql = SPARQLWrapper("https://dbpedia.org/sparql")
-        sparql.setReturnFormat(JSON)
+        #  sparql.setReturnFormat(JSON)
         
         store = SPARQLUpdateStore()
         query_endpoint = "http://localhost:3030/music/query"
@@ -256,21 +256,21 @@ def Grammy():
         store.open((query_endpoint, update_endpoint))
         
         g = Graph(store, identifier=default)
-        
-        
+
         sparql.setQuery(query_class.gbc_external_ontology_queries[0])
         sparql.setReturnFormat(N3)
         query_result = sparql.query().convert()
         g.parse(query_result)
         print(g)
 
-        #store.add_graph(g)
+        store.add_graph(g)
 
         option = request.form.get("option")
         print("chosen option is " + str(option))
 
-        fuseki_result = {}
+        fuseki_result = query_class.return_fuseki_city_info()
         print("fueski results are available")
+
         return render_template(
             "home/Grammy_Artists.html", option=option, option1='1', query_result=fuseki_result, form=categoryForm
         ) 
