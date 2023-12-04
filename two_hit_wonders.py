@@ -38,7 +38,6 @@ class two_hit_wonders_queries:
             self.group_or_solo_query_string = "?artist rdf:type dbo:Person. "
         elif check_for_group_or_solo == "group":
             self.group_or_solo_query_string = "?artist rdf:type dbo:Group. "
-    # VC - Need to add a union statement here for dbo:Band (ex: https://dbpedia.org/page/Black_Eyed_Peas)
         else:
             self.group_or_solo_query_string = "?artist rdf:type owl:Thing. "
 

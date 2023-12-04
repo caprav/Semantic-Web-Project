@@ -62,10 +62,10 @@ class hits_by_country_queries:
             "?external_work_URI p:P495 ?statement. "
             "?statement ps:P495 ?country. "
             "?country rdfs:label ?label "
-            #"?native_label ps:P1705 ?country_name "
             "FILTER(lang(?label) = 'en') "
             "} "
-            'FILTER( ?releaseDate > "' + str(self.start_date) + '"^^xsd:date && ?releaseDate < "' + str(self.end_date) + '"^^xsd:date )'
+            'FILTER( ?releaseDate > "' + str(self.start_date) +
+            '"^^xsd:date && ?releaseDate < "' + str(self.end_date) + '"^^xsd:date )'
             "} "
         )
         print(results_federated_query)
