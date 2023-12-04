@@ -1,0 +1,27 @@
+CONSTRUCT {?works foaf:name ?song_name. ?works dbo:releaseDate ?releaseDate. ?works dbp:award "Gold"@en . ?artist rdf:type owl:Thing. }
+WHERE {
+  ?works a dbo:Song;
+         dbp:award "Gold"@en;
+         dbo:artist ?artist;
+         dbo:releaseDate ?releaseDate.
+  ?artist rdf:type owl:Thing.
+  ?works foaf:name ?song_name
+  FILTER(?releaseDate > "1990-01-01"^^xsd:date && ?releaseDate < "2001-01-01"^^xsd:date)
+}
+
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex: <http://example.org/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?artist_name WHERE {
+    ?song ex:isHitSongOf ?artist .
+    ?artist foaf:name ?artist_name .
+    ?song ex:releaseDate ?date .
+    FILTER (xsd:dateTime(?date) >= "1990-01-01T00:00:00Z"^^xsd:dateTime &&
+            xsd:dateTime(?date) <= "1999-12-31T23:59:59Z"^^xsd:dateTime)
+}
+
+

@@ -14,6 +14,7 @@ from apps.authentication.util import verify_pass
 from apps.fuseki.querydb import create_connection, select_all_users, extract_query
 from flask import jsonify 
 from apps.fuseki.fusekilogic import fueski_query_execution
+import json
 
 
 @blueprint.route('/search', methods=['POST'])
@@ -41,15 +42,20 @@ def execute():
     data = str(data['suggestion'])
 
     if data.startswith('[') and data.endswith(']'):
-        output_string = data[10:-10]
+        output_string = data[2:-2]
     else:
         output_string = data
  
     conn = create_connection()
     query = extract_query(conn, output_string)
 
+    print(query)
+
 
     fuseki_result=fueski_query_execution((query))
+ 
+
+    print(fuseki_result)
  
 
    

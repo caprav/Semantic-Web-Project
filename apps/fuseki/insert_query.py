@@ -52,20 +52,12 @@ def main():
             create_query_repository_table(conn)
 
             # Query data to insert
-            query_data = (1,
+            query_data = (6,
                          
-""" PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-    PREFIX ex: <http://example.org/> 
-    PREFIX foaf: <http://xmlns.com/foaf/0.1/> 
-    SELECT DISTINCT ?artist_name WHERE { 
-    ?song ex:isHitSongOf ?artist. 
-    ?artist foaf:name ?artist_name 
-       }
-     """
+"""SELECT * WHERE { ?athlete rdfs:label "Cristiano Ronaldo" }"""
   
    ,
-    """"This SPARQL query finds unique artist names associated with hit songs in an RDF dataset. It uses prefixes to define namespaces for RDF properties and extracts artist names using the "foaf:name" property.""")
+    """Cristiano rona""")
             
             # Insert query data
             insert_query(conn, query_data)
