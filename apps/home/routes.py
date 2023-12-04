@@ -280,3 +280,37 @@ def Grammy():
         # Handle exceptions or errors here
         print(f"Error: {str(e)}")
         return "An error occurred while querying data.", 500
+
+
+
+
+###############
+    # Sharayu Khedekar 12/03/2023
+    ################
+
+
+
+@blueprint.route("/genres_report", methods=["GET", "POST"])
+def genres_report():
+     
+
+    return render_template(
+            "home/top50.html"
+        ) 
+
+
+@blueprint.route("/usa_report", methods=["GET", "POST"])
+def usa_report():
+     
+
+    return render_template(
+            "home/usacomposers.html"
+        )     
+
+@blueprint.route("/the_beatles", methods=["GET", "POST"])
+def the_beatles():
+     
+
+    return render_template(
+            "home/thebeatles.html"
+        )               

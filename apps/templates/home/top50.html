@@ -1,0 +1,196 @@
+<!-- Code Developed by Sharayu Khedekar last modified on 12-03-2023-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.js"></script>
+  <style>
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .container3 {
+      margin-top: 20px;
+    }
+
+    .form-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    body {
+      background: url("{{ url_for('static', filename='assets/img/Reports_background.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .dataTables_filter {
+      float: right;
+      margin-bottom: 20px;
+    }
+
+    .dataTables_filter input {
+      border-radius: 5px;
+      padding: 5px;
+    }
+  </style>
+</head>
+
+<body class="hitsongartist bg-gray-100">
+  <a href="{{ url_for('authentication_blueprint.logout') }}"
+    class="position-absolute top-0 end-0 m-4 text-white font-weight-bold">
+    <i class="fa fa-sign-out me-1"></i> LOGOUT
+  </a>
+  <main class="main-content position-relative border-radius-lg">
+    <!-- Container 1: Query Description container-->
+    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px">
+      <p>
+       Top 50 ranking music genres on Wikidata.The result is a list of genre labels along with the count of bands in each genre.
+      </p>
+      
+    </div>
+ 
+ <!--container3 -->
+  <div id="resultContainer" class="container container3">
+    <table class="table table-bordered" id="dataTable">
+       
+      
+    
+    </table>
+  
+  </div>
+</main>
+<script>
+   
+    
+  document.addEventListener('DOMContentLoaded', function () {
+    // JSON data from your file
+    var jsonData = [{"genreLabel":"rock music","count":"5726"},{"genreLabel":"punk rock","count":"3921"},{"genreLabel":"alternative rock","count":"3596"},{"genreLabel":"pop music","count":"2689"},{"genreLabel":"indie rock","count":"2439"},{"genreLabel":"J-pop","count":"1653"},{"genreLabel":"jazz","count":"1585"},{"genreLabel":"hard rock","count":"1325"},{"genreLabel":"hip hop music","count":"1322"},{"genreLabel":"heavy metal","count":"1265"},{"genreLabel":"progressive rock","count":"1180"},{"genreLabel":"pop rock","count":"1109"},{"genreLabel":"death metal","count":"1037"},{"genreLabel":"thrash metal","count":"1034"},{"genreLabel":"hardcore punk","count":"1001"},{"genreLabel":"black metal","count":"790"},{"genreLabel":"indie pop","count":"674"},{"genreLabel":"folk music","count":"645"},{"genreLabel":"progressive metal","count":"639"},{"genreLabel":"electronic music","count":"638"},{"genreLabel":"new wave","count":"633"},{"genreLabel":"country music","count":"603"},{"genreLabel":"synth-pop","count":"568"},{"genreLabel":"traditional folk music","count":"567"},{"genreLabel":"folk rock","count":"543"},{"genreLabel":"reggae","count":"541"},{"genreLabel":"rhythm and blues","count":"517"},{"genreLabel":"psychedelic rock","count":"465"},{"genreLabel":"garage rock","count":"404"},{"genreLabel":"metalcore","count":"384"},{"genreLabel":"rock and roll","count":"374"},{"genreLabel":"post-rock","count":"364"},{"genreLabel":"post-punk","count":"350"},{"genreLabel":"power metal","count":"341"},{"genreLabel":"funk","count":"320"},{"genreLabel":"melodic death metal","count":"319"},{"genreLabel":"ska","count":"309"},{"genreLabel":"doom metal","count":"297"},{"genreLabel":"gothic rock","count":"290"},{"genreLabel":"pop punk","count":"288"},{"genreLabel":"electronica","count":"282"},{"genreLabel":"alternative metal","count":"279"},{"genreLabel":"blues","count":"274"},{"genreLabel":"rapping","count":"269"},{"genreLabel":"post-hardcore","count":"260"},{"genreLabel":"soul music","count":"249"},{"genreLabel":"art rock","count":"230"},{"genreLabel":"techno","count":"227"},{"genreLabel":"world music","count":"223"},{"genreLabel":"blues rock","count":"220"}]
+
+    // Function to initialize DataTable with JSON data
+    function initializeDataTable(data) {
+      // Convert JSON data into an array of arrays suitable for DataTable
+      var dataArray = data.map(function(item) {
+        return [item.genreLabel, item.count];
+      });
+
+      // Initialize DataTable
+      $('#dataTable').DataTable({
+        searching: true,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        data: dataArray, // Use the converted data array
+        columns: [
+          { title: 'Genre' },
+          { title: 'Count' }
+        ],
+        order: [[1, 'desc']] //
+      });
+    }
+
+    // Function to hide the resultContainer
+    function hideResultContainer() {
+      document.getElementById('resultContainer').style.display = 'none';
+    } 
+
+    // Function to show the resultContainer
+    function showResultContainer() {
+      document.getElementById('resultContainer').style.display = 'block';
+    } 
+
+    // Display the JSON data in the DataTable when the page loads
+    initializeDataTable(jsonData);
+
+    // Show the resultContainer
+    showResultContainer();
+ 
+/*
+
+
+SELECT ?genreLabel (COUNT(?items) AS ?count)
+WHERE {
+  ?items wdt:P31 wd:Q215380 . # get things that are bands
+  ?items wdt:P136 ?genre . # get the genre of the band
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "en" . #get labels in english.
+    #with this service, you can add "Label" suffix to any variable.
+  }
+}
+
+GROUP BY ?genreLabel
+*/
+
+  // Add event listener to the download button
+  document.getElementById('downloadButton').addEventListener('click', function () {
+      // Function to trigger the download
+      downloadReport();
+    });
+
+    // Function to trigger the download
+    function downloadReport() {
+      // Create a Blob containing the table data
+      var blob = new Blob([tableToCSV(document.getElementById('dataTable'))], { type: 'text/csv;charset=utf-8;' });
+
+      // Create a link element and trigger the download
+      var link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'hits_by_country.csv';
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Function to convert the table to CSV
+    function tableToCSV(table) {
+      var csv = [];
+      var rows = table.getElementsByTagName('tr');
+      for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll('td,th');
+        for (var j = 0; j < cols.length; j++)
+          row.push(cols[j].innerText);
+        csv.push(row.join(','));
+      }
+      return csv.join('\n');
+    }
+
+
+
+});
+</script>
+</body>
+
+</html>
