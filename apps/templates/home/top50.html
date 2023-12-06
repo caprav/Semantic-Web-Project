@@ -77,12 +77,21 @@
   </a>
   <main class="main-content position-relative border-radius-lg">
     <!-- Container 1: Query Description container-->
-    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px">
-      <p>
-       Top 50 ranking music genres on Wikidata.The result is a list of genre labels along with the count of bands in each genre.
-      </p>
-      
-    </div>
+    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px; position: relative;">
+      <div style="margin-right: 60px;"> <!-- Adjust margin-right as needed -->
+          <p>
+              Top 50 ranking music genres on Wikidata. This list provides genre labels along with the count of bands in each genre.
+          </p>
+      </div>
+      <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-primary" style="position: absolute; top: 20; right: 0; margin: 10px;">Back</a>
+  </div>
+  
+  
+  
+  
+  
+  
+  
  
  <!--container3 -->
   <div id="resultContainer" class="container container3">

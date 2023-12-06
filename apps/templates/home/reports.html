@@ -92,28 +92,29 @@
         <a href="{{ url_for('home_blueprint.hits_by_country', option=3, option1=0, query_result={}) }}">Hits By Country</a>
       </div>
       <!-- Option 4 -->
-      <div class="option" title="This is Option 4">
+      <div class="option" title="GrammyAwards:Enter Artist or Band Name to display Grammy Information">
         <a href="grammy.html">Grammy Awards</a>
       </div>
       <!-- Option 5 -->
-      <div class="option" title="This is Option 5">
+      <div class="option" title="Grammy_Artists: This report will allow the user to see the results that are by solo artists, group artists, or
+      Both for different cities and give the hit count based on it. ">
         <a href="{{ url_for('home_blueprint.Grammy_Artists', option=5, option1=0, query_result={}) }}">Gramy Artists </a>
       </div>
       <!-- Option 6 -->
-      <div class="option" title="This is Option 6">
+      <div class="option" title="Top50: Top 50 ranking music genres on Wikidata. This list provides genre labels along with the count of bands in each genre.">
         <a href="{{ url_for('home_blueprint.genres_report', option=6) }}">Top 50 Music genres</a>
       </div>
       <!-- Option 7 -->
-      <div class="option" title="This is Option 7">
+      <div class="option" title="MusicComposers: The query fetches information about composers who are known to Wikidata and retrieves their names and birthplace coordinates. The results are displayed on a map.">
         <a href="{{ url_for('home_blueprint.usa_report', option=7) }}">USA Music Composers</a>
       </div>
       <!-- Option 8 -->
-      <div class="option" title="This is Option 8">
+      <div class="option" title="TheBeatles: The Beatles Discography.">
         <a href="{{ url_for('home_blueprint.the_beatles', option=8) }}">Songs by The Beatles</a>
       </div>
       <!-- Option 9 -->
-      <div class="option" title="This is Option 9">
-        <a href="{{ url_for('home_blueprint.interactive_report', option=9) }}">Option 9</a>
+      <div class="option" title="TourAttendance: This query allows users to select a start date and end date. Returned will be all world concert tours that commenced within that timeframe and list the tour's name, the music artist whose tour it is, and the total attendance figures for the concert.">
+        <a href="{{ url_for('home_blueprint.tour_attendance', option=9) }}">Tour Attendance</a>
       </div>
     </div>
   </main>

@@ -44,3 +44,13 @@ class GrammyArtists(FlaskForm):
         ('group', 'Group'),
         ('both','Both')
     ])
+
+class TourAttendance(FlaskForm):
+     start_date = DateField('Start Date',  
+                           format='%Y-%m-%d',
+                           id='start_date',
+                           validators=[DataRequired()])
+     end_date = DateField('End Date',
+                         format='%Y-%m-%d',
+                         id='end_date',
+                         validators=[DataRequired()])

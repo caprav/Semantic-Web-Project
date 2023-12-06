@@ -46,14 +46,17 @@
 <body class="hitsongartist bg-gray-100">
   <a href="{{ url_for('authentication_blueprint.logout') }}" class="position-absolute top-0 end-0 m-4 text-white font-weight-bold">
     <i class="fa fa-sign-out me-1"></i> LOGOUT
+    
   </a>
   <main class="main-content position-relative border-radius-lg">
     <!-- Container 1: Query Description container-->
-    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px">
+    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px; position: relative;">
       <p>
-        The query fetches information about composers who are known to Wikidata and retrieves their names and birthplace coordinates. The results are displayed on a map.
+          The query fetches information about composers who are known to Wikidata and retrieves their names and birthplace coordinates. The results are displayed on a map.
       </p>
-    </div>
+      <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-primary" style="position: absolute; top: 50px; right: 10px;">Back</a>
+  </div>
+  
 
     <iframe src="https://query.wikidata.org/embed.html#%23defaultView%3AMap%0ASELECT%20%3Fitem%20%3FitemLabel%20%3F_coordinates%20%3F_image%20WHERE%20%7B%0A%20%20%3Fitem%20wdt%3AP106%20wd%3AQ36834%3B%20%20%20%23%20occupation%3A%20composer%0A%20%20%20%20%20%20%20%20wdt%3AP18%20%3F_image%3B%20%20%20%23%20with%20an%20image%20depicting%20them%0A%20%20%20%20%20%20%20%20wdt%3AP19%2Fwdt%3AP625%20%3F_coordinates%3B%20%20%20%23%20their%20birthplace%2C%20specifically%20the%20coordinates%20of%20their%20birthplace%0A%20%20%20%20%20%20%20%20wdt%3AP19%2Fwdt%3AP17%20wd%3AQ30.%20%20%20%23%20born%20in%20the%20United%20States%20(Q30)%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%22%20%7D%20%20%23%20labels%20in%20English%0A%7D%0A" referrerpolicy="origin" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
   </main>

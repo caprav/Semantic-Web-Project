@@ -9,7 +9,8 @@ from rdflib.graph import DATASET_DEFAULT_GRAPH_ID as default
 from two_hit_wonders import two_hit_wonders_queries
 from hits_by_country import hits_by_country_queries
 from grammy_by_city import grammy_by_city_queries
-from apps.home.forms import Hitsongsparams,Hitsongs_bycountry,GrammyArtists
+from tour_attendance import TourAttendance_queries
+from apps.home.forms import Hitsongsparams,Hitsongs_bycountry,GrammyArtists,TourAttendance
 from wtforms.validators import DataRequired 
 from apps.history import insert_history
 import datetime
@@ -62,6 +63,15 @@ def Grammy_Artists():
     option = request.args.get("option")
     return render_template(
         "home/Grammy_Artists.html", option=option,query_result={}, segment="Grammy_Artists", form= categoryForm
+    )
+
+@blueprint.route("/tour_attendance")
+@login_required
+def tour_attendance():
+    categoryForm= TourAttendance(request.form)
+    option = request.args.get("option")
+    return render_template(
+        "home/tour_attendance.html", option=option,query_result={}, segment="tour_attendance", form= categoryForm
     )
 
 @blueprint.route("/reports")
@@ -281,7 +291,52 @@ def Grammy():
         print(f"Error: {str(e)}")
         return "An error occurred while querying data.", 500
 
+ ###############
+    # Ramya Sree S  12/5/23
+    ################
+@blueprint.route("/get_attendance", methods=["GET", "POST"])
+def get_attendance():
+    try:
+        dateForm = TourAttendance(request.form)
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
 
+        print(start_date)
+        print(end_date)
+
+        query_class = TourAttendance_queries(str(start_date), str(end_date))
+        print("class created")
+        sparql = SPARQLWrapper("https://dbpedia.org/sparql")
+        sparql.setReturnFormat(JSON)
+        
+        store = SPARQLUpdateStore()
+        query_endpoint = "http://localhost:3030/music/query"
+        update_endpoint = "http://localhost:3030/music/update"
+        store.open((query_endpoint, update_endpoint))
+        
+        g = Graph(store, identifier=default)
+        
+        sparql.setQuery(query_class.gbc_external_ontology_queries[0])
+        sparql.setReturnFormat(N3)
+        query_result = sparql.query().convert()
+        g.parse(query_result)
+
+        store.add_graph(g)
+
+        option = request.form.get("option")
+        print("chosen option is " + str(option))
+
+        fuseki_result = query_class.return_fuseki_tour_info()
+        print("fueski results are available")
+        
+        return render_template(
+            "home/tour_attendance.html", option=option, option1='1', query_result=fuseki_result, form=dateForm
+        )
+
+    except Exception as e:
+        # Handle exceptions or errors here
+        print(f"Error: {str(e)}")
+        return "An error occurred while querying data.", 500
 
 
 ###############
