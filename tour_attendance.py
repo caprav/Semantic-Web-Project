@@ -9,9 +9,10 @@ class TourAttendance_queries:
                 "prefix schema: <http://schema.org/> "
                 "prefix dbo:    <http://dbpedia.org/ontology/> "
                 "prefix dbc:    <http://dbpedia.org/resource/Category:> "
-                "prefix dbp:    <http://dbpedia.org/property/>"  
+                "prefix dbp:    <http://dbpedia.org/property/> "  
                 "prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
                 "prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> "
+                "prefix xsd:    <http://www.w3.org/2001/XMLSchema#> "
                 )
 
     def __init__(self, start_date, end_date):
