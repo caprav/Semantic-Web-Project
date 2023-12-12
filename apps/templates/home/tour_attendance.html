@@ -1,0 +1,195 @@
+<!-- Code Developed by Ramya Sree S last modified on 11-15-2023-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+  <script defer src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script defer src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+  <script defer src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.js"></script>
+  <style>
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .container3 {
+      margin-top: 20px;
+    }
+
+    .form-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    body {
+      background: url("{{ url_for('static', filename='assets/img/Reports_background.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .dataTables_filter {
+      float: right;
+      margin-bottom: 20px;
+    }
+
+    .dataTables_filter input {
+      border-radius: 5px;
+      padding: 5px;
+    }
+  </style>
+</head>
+
+<body class="hitsongartist bg-gray-100">
+  <a href="{{ url_for('authentication_blueprint.logout') }}"
+    class="position-absolute top-0 end-0 m-4 text-white font-weight-bold">
+    <i class="fa fa-sign-out me-1"></i> LOGOUT
+  </a>
+  <main class="main-content position-relative border-radius-lg">
+    <!-- Container 1: Query Description container-->
+    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px">
+      <p>
+       This query allows users to select a start date and end date. Returned will be all world concert tours that commenced within that timeframe and list the tour's name, the music artist whose tour it is, and the total attendance figures for the concert.
+      </p>
+    </div>
+
+    <!-- Container 2: Add form elements for filter and submit button -->
+    <div class="container container2">
+      <form role="form" id="reportForm" action="{{ url_for('home_blueprint.get_attendance') }}" method="POST"
+        class="form-container" option=option>
+        {{ form.hidden_tag() }}
+
+        {{ form.start_date.label(style="margin-top: 10px;") }}
+        {{ form.start_date(placeholder="Start Date") }}
+
+        {{ form.end_date.label(style="margin-top: 10px;") }}
+        {{ form.end_date(placeholder="End Date") }}
+
+        <input type="hidden" name="option" value="{{ option }}">
+        <input type="hidden" name="option1" value="{{ option1 }}">
+        <button type="submit" class="btn btn-primary" style="margin-left: 300px; margin-top: 10px">Submit</button>
+        <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-primary" style="margin-left: 10px; margin-top: 10px">Back</a>
+      </form>
+    </div>
+    <div id="resultContainer" class="container container3">
+      <table class="table table-bordered" id="dataTable">
+        <thead>
+          <tr>
+            <th>Tour name</th>
+            <th>Artist</th>
+            <th>Attendance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if query_result %}
+          {% for tour_name, data in query_result.items() %}
+          <tr>
+            <td>{{ tour_name }}</td>
+            <td>{{ data[0] }}</td> <!-- Artist column -->
+            <td>{{ data[1] }}</td> <!-- Attendance column -->
+          </tr>
+          {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="3">No results available</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+      <button type="button" id="downloadButton" class="btn btn-primary"
+        style="position: absolute; bottom: 10px; right: 10px;">Download Report</button>
+    </div>    
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      function hideResultContainer() {
+        document.getElementById('resultContainer').style.display = 'none';
+      }
+      
+      function showResultContainer() {
+        document.getElementById('resultContainer').style.display = 'block';
+      }
+      var option1Value = document.getElementById('reportForm').elements['option1'].value;
+      if (option1Value === '1') {
+        showResultContainer();
+      } else {
+        hideResultContainer();
+      }
+
+      // Initialize DataTable
+      $('#dataTable').DataTable({
+        // Enable searching
+        searching: true,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+      });
+
+      // Add event listener to the download button
+      document.getElementById('downloadButton').addEventListener('click', function () {
+        // Function to trigger the download
+        downloadReport();
+      });
+
+      // Function to trigger the download
+      function downloadReport() {
+        // Create a Blob containing the table data
+        var blob = new Blob([tableToCSV(document.getElementById('dataTable'))], { type: 'text/csv;charset=utf-8;' });
+
+        // Create a link element and trigger the download
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'hits_by_country.csv';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      // Function to convert the table to CSV
+      function tableToCSV(table) {
+        var csv = [];
+        var rows = table.getElementsByTagName('tr');
+        for (var i = 0; i < rows.length; i++) {
+          var row = [], cols = rows[i].querySelectorAll('td,th');
+          for (var j = 0; j < cols.length; j++)
+            row.push(cols[j].innerText);
+          csv.push(row.join(','));
+        }
+        return csv.join('\n');
+      }
+    });
+  </script>
+</body>
+
+
+</html>

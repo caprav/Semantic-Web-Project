@@ -1,0 +1,80 @@
+<!-- Code Developed by Sharayu Khedekar last modified on 12-03-2023-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.js"></script>
+  <style>
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    body {
+      background: url("{{ url_for('static', filename='assets/img/Reports_background.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    iframe {
+      width: 80vw;
+      height: 50vh;
+      border: none;
+    }
+  </style>
+</head>
+
+<body class="hitsongartist bg-gray-100">
+  <a href="{{ url_for('authentication_blueprint.logout') }}" class="position-absolute top-0 end-0 m-4 text-white font-weight-bold">
+    <i class="fa fa-sign-out me-1"></i> LOGOUT
+    
+  </a>
+  <main class="main-content position-relative border-radius-lg">
+    <!-- Container 1: Query Description container-->
+    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px; position: relative;">
+      <p>
+          The query fetches information about composers who are known to Wikidata and retrieves their names and birthplace coordinates. The results are displayed on a map.
+      </p>
+      <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-primary" style="position: absolute; top: 50px; right: 10px;">Back</a>
+  </div>
+  
+
+    <iframe src="https://query.wikidata.org/embed.html#%23defaultView%3AMap%0ASELECT%20%3Fitem%20%3FitemLabel%20%3F_coordinates%20%3F_image%20WHERE%20%7B%0A%20%20%3Fitem%20wdt%3AP106%20wd%3AQ36834%3B%20%20%20%23%20occupation%3A%20composer%0A%20%20%20%20%20%20%20%20wdt%3AP18%20%3F_image%3B%20%20%20%23%20with%20an%20image%20depicting%20them%0A%20%20%20%20%20%20%20%20wdt%3AP19%2Fwdt%3AP625%20%3F_coordinates%3B%20%20%20%23%20their%20birthplace%2C%20specifically%20the%20coordinates%20of%20their%20birthplace%0A%20%20%20%20%20%20%20%20wdt%3AP19%2Fwdt%3AP17%20wd%3AQ30.%20%20%20%23%20born%20in%20the%20United%20States%20(Q30)%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%22%20%7D%20%20%23%20labels%20in%20English%0A%7D%0A" referrerpolicy="origin" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+  </main>
+
+
+  <script>
+/*
+Query to display composers all over the world
+#defaultView:Map
+SELECT ?item ?itemLabel ?_coordinates ?_image WHERE {
+  ?item wdt:P106 wd:Q36834;   # occupation: composer
+        wdt:P18 ?_image;   # with an image depicting them
+        wdt:P19/wdt:P625 ?_coordinates   # their birthplace, specifically the coordinates of their birthplace
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }  # labels in English
+}
+*/
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,163 @@
+<!-- Code Developed by Ramya Sree S last modified on 11-15-2023-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <style>
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .container3 {
+      margin-top: 20px;
+    }
+
+    .container4 {
+      margin-top: 20px;
+    }
+
+    .form-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .select-artist-container {
+      margin-right: auto; /* Push the artist selection to the left */
+    }
+
+    .confirm-button {
+      margin-left: auto; /* Push the Confirm button to the right */
+      margin-top: 10px;
+    }
+
+    body {
+      background: url("{{ url_for('static', filename='assets/img/Reports_background.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body class="reportsales bg-gray-100">
+
+  <a href="{{ url_for('authentication_blueprint.logout') }}"
+    class="position-absolute top-0 end-0 m-4 text-white font-weight-bold">
+    <i class="fa fa-sign-out me-1"></i> LOGOUT
+  </a>
+  <main class="main-content position-relative border-radius-lg">
+    <div class="container container1" style="margin-top: 50px; margin-bottom: 20px">
+      <p>This report will allow the user to search for a specific artist (group or solo). When the user enters an
+        artist's name in the search and clicks submit, they will see all of the possible matching artist results in the
+        Artists dropdown. The user can then select an artist and confirm to view the artist's single sales.</p>
+    </div>
+
+     <!-- Container 2: Modified form elements for filter and submit button 
+    Sharayu : Changed logic to pull artist info from backend
+    -->
+    <div class="container container2">
+      <form role="form" action="{{ url_for('dbpedia_blueprint.get_artist') }}" method="POST" class="form-container">
+        <div class="search-container">
+          <!-- Text box for entering artist's name -->
+          <div class="search-box">
+            <label for="artistName">Enter Artist Name:</label>
+            <input type="text" id="artistName" name="artistName" required>
+            <button type="submit" class="btn btn-primary" style="margin-left: 350px; margin-top: 10px">Submit</button>
+            <a href="{{ url_for('home_blueprint.Return') }}" class="btn btn-primary"
+              style="margin-left: 10px; margin-top: 10px">Back</a>
+          </div>
+          <input type="hidden" name="option1" id="option1" value="{{ option1 }}">
+        </div>
+      </form>
+    </div>
+ 
+    <!-- Container 3: Add form elements for filter and submit button 
+    Sharayu : Changed logic to pull Sales info from backend-->
+    <div id="container3" class="container container3">
+      <form role="form" action="{{ url_for('dbpedia_blueprint.get_sales') }}" method="POST" class="form-container">
+        <!-- Dropdown box for selecting artist -->
+        <div class="select-artist-container">
+          <label for="selectArtist">Select Artist:</label>
+          <select id="selectArtist" name="selectArtist">
+            {% for artist in artist_names %}
+            <option value="{{ artist }}">{{ artist }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <!-- Confirm button always on the right -->
+        <button type="submit" class="btn btn-primary confirm-button">Confirm</button>
+      </form>
+    </div>
+
+    <div id="container4" class="container container4 ">
+      <!-- Display results here -->
+      <table>
+        <thead>
+          <tr>
+            <th>Total Singles Sales: {{ total_sales }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if info_message %}
+          <tr>
+            <td>{{ info_message }}</td> <!-- Display the info_message if it exists -->
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var option1Value = document.getElementById('option1').value;
+
+      function hideContainer3() {
+        var container3 = document.getElementById('container3');
+          container3.style.display = 'none';
+      }
+      function hideContainer4() {
+        var container4 = document.getElementById('container4');
+          container4.style.display = 'none';
+      }
+
+      function showContainer3() {
+        var container3 = document.getElementById('container3');
+          container3.style.display = 'block';
+      }
+
+      function showContainer4() {
+        var container4 = document.getElementById('container4');
+          container4.style.display = 'block';
+      }
+
+      if (option1Value === '1') {
+        showContainer3();
+        hideContainer4();
+      } else if (option1Value === '2') {
+        showContainer3();
+        showContainer4();
+      } else {
+        hideContainer3();
+        hideContainer4();
+      }
+    });
+  </script>
+</body>
+
+</html>

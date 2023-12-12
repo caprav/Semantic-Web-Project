@@ -1,0 +1,136 @@
+<!-- Sharayu Display User History Info-->
+{% extends 'layouts/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .highlight {
+        background-color: yellow;
+        /* or any color of your choice */
+    }
+
+    .history-container {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .history-entry {
+        border-bottom: 1px solid #e1e1e1;
+        padding: 15px 0;
+    }
+
+    .history-entry:last-child {
+        border-bottom: none;
+    }
+
+    .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 5px;
+    }
+
+    .history-title {
+        font-size: 1.2em;
+        color: #333;
+    }
+
+    .history-address {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .search-box {
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 1em;
+    }
+    
+    body {
+      background: url("{{ url_for('static', filename='assets/img/Reports_background.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include "includes/sidenav.html" %}
+<main class="main-content position-relative border-radius-lg ">
+    {% include "includes/navigation.html" %}
+    <!-- Search Feature -->
+    <div class="container mt-3 search-box">
+        <input type="text" id="historySearch" onkeyup="searchHistory()" class="search-input"
+            placeholder="Search history..." title="Search history">
+    </div>
+    <!-- History Entries -->
+    <div class="container history-container">
+        <h2>History</h2>
+        {% for entry in history %}
+        <div class="history-entry">
+            <div class="history-header">
+                <span class="history-title">{{ entry.artist_name }}</span>
+                <span class="history-date">{{ entry.query_date }}</span>
+            </div>
+            <div class="history-address">{{ entry.parameter_1 }}</div>
+            <!-- More details can be included here, possibly hidden with a 'More details' button -->
+        </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock content %}
+
+
+{% block javascripts %}
+<script>
+    function searchHistory() {
+        // Get the value from the search input
+        var input = document.getElementById('historySearch').value.toUpperCase();
+        console.log('Input:', input);
+
+        // Get the container that holds all history entries
+        var historyContainer = document.querySelector('.history-container');
+
+        // Get all the history entries
+        var entries = historyContainer.getElementsByClassName('history-entry');
+
+        // Loop through all history entries
+        for (var i = 0; i < entries.length; i++) {
+            // Boolean to track if any match is found in this entry
+            var isMatchFound = false;
+
+            // Getting all the text elements in the entry
+            var textElements = entries[i].querySelectorAll('.history-title, .history-address, .history-date'); // Add other classes if needed
+
+            // Check each text element for a match
+            textElements.forEach(function (element) {
+                var textValue = element.textContent || element.innerText;
+                var index = textValue.toUpperCase().indexOf(input);
+
+                if (index > -1) {
+                    isMatchFound = true; // Mark as a match found
+                    var matchedText = textValue.substring(index, index + input.length);
+                    var highlightedText = "<span class='highlight'>" + matchedText + "</span>";
+                    element.innerHTML = textValue.replace(matchedText, highlightedText);
+                } else {
+                    // Reset the innerHTML to remove any previous highlights
+                    element.innerHTML = textValue;
+                }
+            });
+
+            // Display or hide the entry based on if a match was found
+            entries[i].style.display = isMatchFound ? "" : "none";
+        }
+    }
+</script>
+{% endblock javascripts %}

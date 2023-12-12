@@ -1,0 +1,123 @@
+<!-- Sharayu Display User Reviews Data-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="{{ config.ASSETS_ROOT }}/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="{{ config.ASSETS_ROOT }}/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- CSS Files -->
+    <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet">
+    <style>
+        .review-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .review-image {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+        }
+
+        .review-title {
+            font-size: 1.25rem;
+            margin-bottom: 0;
+        }
+
+        .review-category,
+        .review-description,
+        .review-url,
+        .review-details {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .review-details {
+            margin-bottom: 1rem;
+        }
+
+        .text-muted {
+            color: #6c757d;
+        }
+
+        .min-height-300 {
+            background-image: url('../../static/assets/img/dalle.png');
+            /* Adjust the path as necessary */
+            background-size: cover;
+            /* This will ensure that the image covers the entire div and is responsive */
+            background-position: center;
+            /* This will center your image in the div */
+            background-repeat: no-repeat;
+            /* This will prevent the image from repeating */
+            height: 300px;
+            /* You need to set a height for the div if you haven't already */
+        }
+    </style>
+
+</head>
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="min-height-300 bg-primary position-absolute w-100">
+</div>
+
+{% include "includes/sidenav.html" %}
+<main class="main-content position-relative border-radius-lg">
+    {% include "includes/navigation.html" %}
+
+    <div class="container mt-5">
+        <div id="reviews-container" style="margin-top: 25%; padding: 20px;">
+            <a href="add-review.html" class="btn btn-success">Add a Review</a>
+            {% for entry in reviews %}
+            <div class="review-item">
+                <div class="media">
+                    <!-- Use JavaScript to generate a random image URL -->
+                    <img src="" class="mr-3 review-image" alt="Image">
+
+                    <div class="media-body">
+                        <h5 class="review-title">{{ entry.category }}</h5>
+                        <p class="review-text mb-0">by {{ entry.username }}</p>
+                        <p class="review-text"><small class="text-muted">{{ entry.date }}</small></p>
+                        <p class="review-text">{{ entry.description }}</p>
+                        <p class="review-text">{{ entry.details }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</main>
+
+{% endblock content %}
+{% block javascripts %}
+
+<script>
+
+    var reviewImages = document.querySelectorAll('.review-image');
+    var imageFolder = '../../static/assets/img/review/'; // Path to your image folder
+
+    // Array of image file names
+    var imageFiles = [];
+
+    for (var i = 1; i <= 47; i++) {
+        imageFiles.push(i + '.jpg');
+    }
+
+    reviewImages.forEach(function (image) {
+        // Generate a random index to select a random image file
+        var randomIndex = Math.floor(Math.random() * imageFiles.length);
+
+        // Set the src attribute of the image element to a random image URL
+        image.src = imageFolder + imageFiles[randomIndex];
+    });
+
+</script>
+
+{% endblock javascripts %}

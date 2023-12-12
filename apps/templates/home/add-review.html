@@ -1,0 +1,108 @@
+<!-- Sharayu Display User Reviews Data-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="{{ config.ASSETS_ROOT }}/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="{{ config.ASSETS_ROOT }}/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- CSS Files -->
+    <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet">
+    <style>
+        .review-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .review-image {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+        }
+
+        .review-title {
+            font-size: 1.25rem;
+            margin-bottom: 0;
+        }
+
+        .review-category,
+        .review-description,
+        .review-url,
+        .review-details {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .review-details {
+            margin-bottom: 1rem;
+        }
+
+        .text-muted {
+            color: #6c757d;
+        }
+
+        .min-height-300 {
+            background-image: url('../../static/assets/img/dalle.png');
+            /* Adjust the path as necessary */
+            background-size: cover;
+            /* This will ensure that the image covers the entire div and is responsive */
+            background-position: center;
+            /* This will center your image in the div */
+            background-repeat: no-repeat;
+            /* This will prevent the image from repeating */
+            height: 300px;
+            /* You need to set a height for the div if you haven't already */
+        }
+    </style>
+    </style>
+</head>
+
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+{% block content %}
+<div class="min-height-300 bg-primary position-absolute w-100">
+</div>
+{% include "includes/sidenav.html" %}
+
+<main class="main-content position-relative border-radius-lg">
+    {% include "includes/navigation.html" %}
+
+    <div class="container mt-5">
+        <div id="reviews-container" style="margin-top: 25%; padding: 20px;">
+            <!-- Start of the new form -->
+            <form role="form" action="{{ url_for('reviews_blueprint.add_reviews') }}" method="post" option=option>
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <input type="text" id="category" name="category" class="form-control" style="width: 20%;" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" class="form-control" style="width: 20%;" rows="2"
+                        required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="url">URL:</label>
+                    <input type="text" id="url" name="url" class="form-control" style="width: 20%;">
+                </div>
+
+                <div class="form-group">
+                    <label for="details">Details:</label>
+                    <textarea id="details" name="details" class="form-control" style="width: 20%;" rows="2"
+                        required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+            <!-- End of the new form -->
+
+        </div>
+    </div>
+    </div>
+</main>
+{% endblock content %}
